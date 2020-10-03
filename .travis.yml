@@ -26,5 +26,6 @@ deploy: # see README for details on these keys
   # app should be your heroku app name; see README
   app: power-sleep
   # the secure key indicates an encrypted value; see README
+  on: main
   api_key:
     secure: MVr9kLWvZh/rCPW44rdeVvRJi0fMq6ufhqQTfCjJB3F2AkjRBHpEWwqwsfIb+99AFbIW7lSVeP18vcGBsnZDSqq7KfRD5jcaqhilpDcOCUYleQcKYHtLlU4Z5w4sJc8TOMrjfMh9MmgcbFzCQCM+1uBLqkUPlWazTHLAtX9cM25rBgpvw1s9FKbiNmywfqk06b6LDzzLUOJEhgrYrQL2T92HFOiCjWKudtB0UwewI7oORVo0JN4BV9aUqxSG2bjcaeVIDC6qX7q0/vlD4Svm3yeLPPRSd8RBUK/F6wsbH9zTp/T39/udWAL16vYZRxfymRNacZmhR7MdAU6d0uJbXS75RbIHcrHx5dLRCsLiZcbZsNfAtoixNMl4YhtraCFTDd7KvmWT4ZO075GRvutijN+6vDc0Ffd3CQcpxl/vyz5KX9VL/ba49smlOH9S5Mw3/WbNQe2YRJi5y3u1xpQSA3Rv7Qc+xsP+12IMLIcejmC2570PlAXukzZ99Xq+/W0KNdXEVXaCJEa01vz18wt/GLuh20v1VpYZMA96ZnedU8YWw/en3yF0BGEXvPE26ZRDONeJxemAS9RfS+LBIxIoPeurFslbJxKUiaDofbDs3fODpV0wQV+omu+XfZIxc5p49vgFyzHdxdh8N0/XkiMP2+JwVA58MX+Z6KRQrGG+rn0=
