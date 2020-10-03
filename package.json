@@ -1,7 +1,7 @@
 {
-  "name": "boilerplate",
-  "version": "2.0.0",
-  "description": "my generic template",
+  "name": "powersleep",
+  "version": "1.0.0",
+  "description": "Sleep scheduler for NASA 2020 Space Apps Challenge",
   "engines": {
     "node": "~12.11.1"
   },
@@ -38,7 +38,7 @@
       "git add"
     ]
   },
-  "author": "Fullstack Academy of Code",
+  "author": "Cecilia Chung, Kali, Lu Wang",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
