@@ -50,7 +50,7 @@ const App = () => {
         },
         end: {
           dateTime: '2020-10-03T17:00:00-07:00',
-          timeZone: 'America/Los_Angeles',
+          timeZone: 'America/Florida',
         },
         recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
         attendees: [{email: 'lpage@example.com'}, {email: 'sbrin@example.com'}],
