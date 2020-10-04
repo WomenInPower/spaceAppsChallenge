@@ -45,3 +45,7 @@ h2 {
 h3 {
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
+
+iframe {
+  border-width: 0;
+}
