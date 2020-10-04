@@ -17,7 +17,7 @@ const App = () => {
     'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
   ]
   // Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
-  const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+  const SCOPES = 'https://www.googleapis.com/auth/calendar.events'
 
   // function that handles whenever we click on a "add event to my calendar" type of button
   const handleClick = async () => {
@@ -69,7 +69,7 @@ const App = () => {
       })
 
       request.execute((event) => {
-        window.open(event.htmlLink)
+        console.log('after requesting to insert to events, got event: ', event)
       })
     })
   }

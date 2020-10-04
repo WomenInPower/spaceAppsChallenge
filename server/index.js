@@ -6,8 +6,16 @@ const session = require('express-session')
 const passport = require('passport')
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 const db = require('./db')
-const sessionStore = new SequelizeStore({db})
+const https = require('https')
+const http = require('http')
+const fs = require('fs')
+
+require('dotenv').config()
 const PORT = process.env.PORT || 8080
+const TLS_KEY = process.env.TLS_KEY || ''
+const TLS_CERT = process.env.TLS_CERT || ''
+
+const sessionStore = new SequelizeStore({db})
 const app = express()
 const socketio = require('socket.io')
 module.exports = app
@@ -57,7 +65,7 @@ const createApp = () => {
       secret: process.env.SESSION_SECRET || 'my best friend is Cody',
       store: sessionStore,
       resave: false,
-      saveUninitialized: false
+      saveUninitialized: false,
     })
   )
   app.use(passport.initialize())
@@ -96,9 +104,21 @@ const createApp = () => {
 
 const startListening = () => {
   // start listening (and create a 'server' object representing our server)
-  const server = app.listen(PORT, () =>
-    console.log(`Mixing it up on port ${PORT}`)
-  )
+  let server
+  if (TLS_KEY && TLS_CERT) {
+    console.log('Using HTTPS')
+    server = https.createServer(
+      {
+        key: fs.readFileSync(TLS_KEY),
+        cert: fs.readFileSync(TLS_CERT),
+      },
+      app
+    )
+  } else {
+    console.log('Not using HTTPS')
+    server = http.createServer(app)
+  }
+  server.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`))
 
   // set up our socket control center
   const io = socketio(server)
