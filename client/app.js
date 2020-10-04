@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {Navbar} from './components'
+import { Navbar } from './components'
 import Routes from './routes'
 
 const App = () => {
@@ -41,24 +41,24 @@ const App = () => {
       await gapi.auth2.getAuthInstance().signIn()
 
       const event = {
-        summary: 'Google I/O 2015',
-        location: '800 Howard St., San Francisco, CA 94103',
-        description: "A chance to hear more about Google's developer products.",
+        summary: 'NASA Hackathon',
+        location: 'Virtual, anywhere in the world',
+        description: 'Leave your print in the future of space exploration!',
         start: {
-          dateTime: '2020-10-03T09:00:00-07:00',
-          timeZone: 'America/Los_Angeles',
+          dateTime: '2020-10-03T09:00:00-05:00',
+          timeZone: 'America/New_York',
         },
         end: {
-          dateTime: '2020-10-03T17:00:00-07:00',
-          timeZone: 'America/Florida',
+          dateTime: '2020-10-04T23:59:00-05:00',
+          timeZone: 'America/NewYork',
         },
         recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-        attendees: [{email: 'lpage@example.com'}, {email: 'sbrin@example.com'}],
+        attendees: [{ email: 'lpage@example.com' }, { email: 'sbrin@example.com' }],
         reminders: {
           useDefault: false,
           overrides: [
-            {method: 'email', minutes: 24 * 60},
-            {method: 'popup', minutes: 10},
+            { method: 'email', minutes: 24 * 60 },
+            { method: 'popup', minutes: 10 },
           ],
         },
       }
@@ -69,8 +69,28 @@ const App = () => {
       })
 
       request.execute((event) => {
-        console.log('after requesting to insert to events, got event: ', event)
+        console.log('inside the execute request')
+        console.log(
+          'After inserting event, this gets added to the calendar: ',
+          event
+        )
+        window.open(event.htmlLink)
       })
+
+      // get events
+      gapi.client.calendar.events
+        .list({
+          calendarId: 'primary',
+          timeMin: new Date().toISOString(),
+          showDeleted: false,
+          singleEvents: true,
+          maxResults: 10,
+          orderBy: 'startTime',
+        })
+        .then((response) => {
+          const events = response.result.items
+          console.log('EVENTS: ', events)
+        })
     })
   }
 
