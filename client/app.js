@@ -69,7 +69,12 @@ const App = () => {
       })
 
       request.execute((event) => {
-        console.log('after requesting to insert to events, got event: ', event)
+        console.log('inside the execute request')
+        console.log(
+          'After inserting event, this gets added to the calendar: ',
+          event
+        )
+        window.open(event.htmlLink)
       })
     })
   }
