@@ -1,5 +1,7 @@
 body {
   font-family: sans-serif;
+  background-color: black;
+  color: lightgray;
 }
 
 a {
@@ -15,7 +17,31 @@ nav a {
   margin: 1em;
 }
 
+.nav {
+  display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); */
+  grid-gap: 1rem;
+  grid-template-columns: 2fr 9fr 1fr 1fr 1fr 1fr;
+  background-color: black;
+  color: white;
+  text-align: center;
+  height: 100px;
+}
+
 form div {
   margin: 1em;
   display: inline-block;
+}
+
+h1 {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  text-align: center;
+}
+
+h2 {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+h3 {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }

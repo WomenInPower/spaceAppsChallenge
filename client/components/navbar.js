@@ -5,7 +5,8 @@ import {logout} from '../store'
 
 const Navbar = ({handleClick, isLoggedIn}) => (
   <div>
-    <h1>power sleep</h1>
+    <img src="images/power.png" align="left" />
+    {/* <h1>power sleep</h1> */}
     <nav>
       {isLoggedIn ? (
         <div>
