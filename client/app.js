@@ -1,6 +1,6 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {Navbar} from './components'
+import { connect } from 'react-redux'
+import { Navbar } from './components'
 import Routes from './routes'
 
 const App = () => {
@@ -20,7 +20,7 @@ const App = () => {
   const SCOPES = 'https://www.googleapis.com/auth/calendar.events'
 
   function sleepShift(events) {
-    let sleepEvent = {Summary: 'Sleep'}
+    let sleepEvent = { Summary: 'Sleep' }
     // get events
     events.forEach((event) => {
       // if the event is flight on earth
@@ -140,7 +140,7 @@ const App = () => {
   )
 }
 
-const mapState = ({events}) => ({events})
+const mapState = ({ events }) => ({ events })
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
