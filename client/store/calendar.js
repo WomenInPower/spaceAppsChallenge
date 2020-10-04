@@ -2,7 +2,20 @@
 // import axios from 'axios'
 // import history from '../history'
 
-// dummy data
+// Initializing all of the variables
+const gapi = window.gapi
+const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
+const API_KEY = process.env.GOOGLE_CALENDAR_API_KEY
+console.log('process.env keys: ' + Object.keys(process.env))
+
+// Array of API discovery doc URLs for APIs used by the quickstart
+const DISCOVERY_DOCS = [
+  'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
+]
+// Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
+const SCOPES = 'https://www.googleapis.com/auth/calendar.events'
+
+/* dummy data
 const events = [
   {
     summary: 'Flight',
@@ -17,12 +30,12 @@ const events = [
       timeZone: 'America/Florida',
     },
     recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-    attendees: [{email: 'lpage@example.com'}],
+    attendees: [{ email: 'lpage@example.com' }],
     reminders: {
       useDefault: false,
       overrides: [
-        {method: 'email', minutes: 24 * 60},
-        {method: 'popup', minutes: 10},
+        { method: 'email', minutes: 24 * 60 },
+        { method: 'popup', minutes: 10 },
       ],
     },
   },
@@ -39,41 +52,55 @@ const events = [
       timeZone: 0,
     },
     recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-    attendees: [{email: 'lpage@example.com'}],
+    attendees: [{ email: 'lpage@example.com' }],
     reminders: {
       useDefault: false,
       overrides: [
-        {method: 'email', minutes: 24 * 60},
-        {method: 'popup', minutes: 10},
+        { method: 'email', minutes: 24 * 60 },
+        { method: 'popup', minutes: 10 },
       ],
     },
   },
 ]
+*/
 
 /**
  * ACTION TYPES
  */
-const GET_EVENT = 'GET_EVENT'
+const GET_EVENTS = 'GET_EVENTS'
 
 /**
  * INITIAL STATE
  */
-const defaultEvent = {}
+const defaultEvents = []
 
 /**
  * ACTION CREATORS
  */
-const getEvent = (event) => ({type: GET_EVENT, event})
+const getEvents = (events) => ({type: GET_EVENTS, events})
 
 /**
  * THUNK CREATORS
  */
-export const loadEvent = () => async (dispatch) => {
+export const loadEvents = () => async (dispatch) => {
   try {
-    // const events = service.events().get(calendarId='primary', eventId='eventId').execute()
-    const sleepEvent = sleepShift(events)
+    gapi.client.init({
+      apiKey: API_KEY,
+      clientId: CLIENT_ID,
+      discoveryDocs: DISCOVERY_DOCS,
+      scope: SCOPES,
+    })
 
-    dispatch(getEvent(sleepEvent || defaultEvent))
+    gapi.client.load('calendar', 'v3', () =>
+      console.log('loaded the calendar API')
+    )
+
+    await gapi.auth2.getAuthInstance().signIn()
+    gapi.client.calendar.events.get({}).then((response) => {
+      const events = response.result.items
+      dispatch(getEvents(events || defaultEvents))
+      console.log('EVENTS: ', events)
+    })
   } catch (err) {
     console.error(err)
   }
@@ -82,66 +109,11 @@ export const loadEvent = () => async (dispatch) => {
 /**
  * REDUCER
  */
-export default function (state = defaultEvent, action) {
+export default function (state = defaultEvents, action) {
   switch (action.type) {
-    case GET_EVENT:
-      return action.event
+    case GET_EVENTS:
+      return action.events
     default:
       return state
   }
-}
-
-function sleepShift(events) {
-  let sleepEvent = {Summary: 'Sleep'}
-  events.forEach((event) => {
-    // if the event is flight on earth
-    if (event.summary === 'Flight') {
-      // we'll use moment.js to convert later
-      let startDate = event.start.dateTime.slice(8, 10)
-      let endDate = event.end.dateTime.slice(8, 10)
-      let startTime = Number(event.start.dateTime.slice(11, 13))
-
-      // if the event is not overnight, we can extract the dates using moment.js
-      if (startDate === endDate) {
-        let poss1 = Math.abs(0 - (startTime - 2))
-        let poss2 = Math.abs(23 - startTime)
-        const hourToStartSleep = poss1 < poss2 ? startTime : 0
-        const hourToEndSleep = hourToStartSleep + 8
-        // then convert the hour back to Google calendar timestamp format using moment.js later
-        let start
-        let end
-        if (hourToStartSleep < 10) {
-          start =
-            event.start.dateTime.slice(0, 11) +
-            '0' +
-            hourToStartSleep +
-            event.start.dateTime.slice(13)
-        } else {
-          start =
-            event.start.dateTime.slice(0, 11) +
-            hourToStartSleep +
-            event.start.dateTime.slice(13)
-        }
-        if (hourToEndSleep < 10) {
-          end =
-            event.end.dateTime.slice(0, 11) +
-            '0' +
-            hourToEndSleep +
-            event.end.dateTime.slice(13)
-        } else {
-          end =
-            event.end.dateTime.slice(0, 11) +
-            hourToEndSleep +
-            event.end.dateTime.slice(13)
-        }
-        sleepEvent.start = start
-        sleepEvent.end = end
-        return sleepEvent
-        // else if the event is overnight
-      }
-      // if the event is launch from earch to ISS
-    }
-  })
-
-  return sleepEvent
 }

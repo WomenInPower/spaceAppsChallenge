@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {Splash, Login, UserHome} from './components'
-import {me, loadEvent} from './store'
+import {me, loadEvents} from './store'
 
 /**
  * COMPONENT
@@ -48,7 +48,7 @@ const mapDispatch = (dispatch) => {
   return {
     loadInitialData() {
       dispatch(me())
-      dispatch(loadEvent())
+      // dispatch(loadEvents())
     },
   }
 }
