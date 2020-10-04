@@ -14,9 +14,6 @@ const Navbar = ({handleClick, isLoggedIn}) => (
           <a href="/home">
             <img src="images/home.png" />
           </a>
-          <a href="/howto">
-            <img src="images/howto.png" />
-          </a>
           <a href="/about">
             <img src="images/about.png" />
           </a>
@@ -29,9 +26,6 @@ const Navbar = ({handleClick, isLoggedIn}) => (
           {/* The navbar will show these links before you log in */}
           <a href="/home">
             <img src="images/home.png" />
-          </a>
-          <a href="/howto">
-            <img src="images/howto.png" />
           </a>
           <a href="/about">
             <img src="images/about.png" />
