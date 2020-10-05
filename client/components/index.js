@@ -6,4 +6,5 @@
 export {default as Navbar} from './navbar'
 export {default as Splash} from './splash'
 export {default as UserHome} from './user-home'
+export {default as About} from './about'
 export {Login, Signup} from './auth-form'
