@@ -77,12 +77,7 @@ const AddToCalendar = () => {
           }
           sleepEvent.start.dateTime = start
           sleepEvent.end.dateTime = end
-          // else if the event ends on the next day
         }
-        // else {
-        // }
-        // if the event is launch from earch to ISS
-        // } else if (event.summary === 'Launch'){
       }
     })
     console.log(sleepEvent)
@@ -120,18 +115,6 @@ const AddToCalendar = () => {
           console.log(sleepEvent)
           console.log('EVENTS: ', events)
         })
-      // hard-coded event (in the future we will pull event info from algo)
-
-      /*sleepEvent = {
-        summary: 'sleep',
-        start: {
-          dateTime: '2020-10-05T09:00:00-04:00',
-        },
-        end: {
-          dateTime: '2020-10-05T17:00:00-04:00',
-        },
-      }
-      */
 
       console.log(sleepEvent)
 
@@ -140,68 +123,19 @@ const AddToCalendar = () => {
         calendarId: 'primary',
         resource: sleepEvent,
       })
-      // Opens new tab with Google Calendar (might not need since we embedded)
-      request.execute((event) => {
-        window.open(event.htmlLink)
-      })
 
-      // get all events of the calendar in the developer console
-      /*
-      gapi.client.calendar.events
-        .list({
-          calendarId: 'primary',
-          timeMin: new Date().toISOString(),
-          showDeleted: false,
-          singleEvents: true,
-          maxResults: 10,
-          orderBy: 'startTime',
-        })
-        .then((response) => {
-          const events = response.result.items
-          console.log('EVENTS: ', events)
-        })
-        */
     })
   }
 
   return (
     <div>
-      <button onClick={handleClick}>
+    <input type="image" src="images/sleep.png" border="0" alt="Submit" onClick={handleClick} />
+      {/* <button >
         {' '}
         Generate Sleep Schedule to your Google Calendar
-      </button>
+      </button> */}
     </div>
   )
 }
 
 export default AddToCalendar
-
-/*
-TBD where we will have the button to add a sleeping event to the calendar
-<button onClick={handleClick}> Add Sleep Schedule to your Google Calendar</button>
-*/
-
-/*
-const event = {
-  summary: 'NASA Hackathon',
-  location: 'Virtual, anywhere in the world',
-  description: 'Leave your print in the future of space exploration!',
-  start: {
-    dateTime: '2020-10-03T09:00:00-05:00',
-    timeZone: 'America/New_York',
-  },
-  end: {
-    dateTime: '2020-10-04T23:59:00-05:00',
-    timeZone: 'America/New_York',
-  },
-  recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-  attendees: [{email: 'lpage@example.com'}, {email: 'sbrin@example.com'}],
-  reminders: {
-    useDefault: false,
-    overrides: [
-      {method: 'email', minutes: 24 * 60},
-      {method: 'popup', minutes: 10},
-    ],
-  },
-}
-*/
