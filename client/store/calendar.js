@@ -15,55 +15,6 @@ const DISCOVERY_DOCS = [
 // Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
 const SCOPES = 'https://www.googleapis.com/auth/calendar.events'
 
-/* dummy data
-const events = [
-  {
-    summary: 'Flight',
-    location: 'NASA, Houston, TX',
-    description: 'Flight from Houston to Florida',
-    start: {
-      dateTime: '2020-10-03T09:00:00-07:00',
-      timeZone: 'America/Houston',
-    },
-    end: {
-      dateTime: '2020-10-03T12:00:00-07:00',
-      timeZone: 'America/Florida',
-    },
-    recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-    attendees: [{ email: 'lpage@example.com' }],
-    reminders: {
-      useDefault: false,
-      overrides: [
-        { method: 'email', minutes: 24 * 60 },
-        { method: 'popup', minutes: 10 },
-      ],
-    },
-  },
-  {
-    summary: 'Launch',
-    location: 'Florida Rocket Launch Site',
-    description: 'Lanuch from Rocket Launch Site to ISS, duration is 24 hours',
-    start: {
-      dateTime: '2020-10-03T015:00:00-07:00',
-      timeZone: 'America/Houston',
-    },
-    end: {
-      dateTime: '2020-10-04T15:00:00-07:00',
-      timeZone: 0,
-    },
-    recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-    attendees: [{ email: 'lpage@example.com' }],
-    reminders: {
-      useDefault: false,
-      overrides: [
-        { method: 'email', minutes: 24 * 60 },
-        { method: 'popup', minutes: 10 },
-      ],
-    },
-  },
-]
-*/
-
 /**
  * ACTION TYPES
  */
@@ -84,22 +35,44 @@ const getEvents = (events) => ({type: GET_EVENTS, events})
  */
 export const loadEvents = () => async (dispatch) => {
   try {
-    gapi.client.init({
-      apiKey: API_KEY,
-      clientId: CLIENT_ID,
-      discoveryDocs: DISCOVERY_DOCS,
-      scope: SCOPES,
-    })
+    gapi.load('client:auth2', async () => {
+      gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        discoveryDocs: DISCOVERY_DOCS,
+        scope: SCOPES,
+      })
 
-    gapi.client.load('calendar', 'v3', () =>
-      console.log('loaded the calendar API')
-    )
+      gapi.client.load('calendar', 'v3', () => {})
 
-    await gapi.auth2.getAuthInstance().signIn()
-    gapi.client.calendar.events.get({}).then((response) => {
+      await gapi.auth2.getAuthInstance().signIn()
+
+      let sleepEvent
+      // get all events of the calendar in the developer console
+      const response = await gapi.client.calendar.events.list({
+        calendarId: 'primary',
+        timeMin: new Date().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: 'startTime',
+      })
+
       const events = response.result.items
       dispatch(getEvents(events || defaultEvents))
+      sleepEvent = sleepShift(events)
       console.log('EVENTS: ', events)
+
+      console.log(sleepEvent)
+      // Inserts the event (hard coded for now) to the authorized calendar
+      const request = gapi.client.calendar.events.insert({
+        calendarId: 'primary',
+        resource: sleepEvent,
+      })
+      // Opens new tab with Google Calendar (might not need since we embedded)
+      request.execute((event) => {
+        window.open(event.htmlLink)
+      })
     })
   } catch (err) {
     console.error(err)

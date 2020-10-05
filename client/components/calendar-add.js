@@ -32,7 +32,7 @@ const AddToCalendar = () => {
           .hours()
         let endTime = moment.tz(event.end.dateTime, event.end.timeZone).hours()
         console.log('startTime:', startTime, 'endTime:', endTime)
-        // if the event is on the same day, we can extract the dates using moment.js
+        // if the event is not overnight
         if (startDate === endDate) {
           let emptyBlock = 24 - (endTime - startTime + 4)
           console.log('Empty Time Block:', emptyBlock)
@@ -132,10 +132,7 @@ const AddToCalendar = () => {
 
   return (
     <div>
-      <button onClick={handleClick}>
-        {' '}
-        Generate Sleep Schedule to your Google Calendar
-      </button>
+      <button onClick={handleClick}> Generate My Sleep Schedule</button>
     </div>
   )
 }
