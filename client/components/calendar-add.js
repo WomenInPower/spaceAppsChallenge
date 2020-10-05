@@ -127,10 +127,6 @@ const AddToCalendar = () => {
   return (
     <div>
     <input type="image" src="images/sleep.png" border="0" alt="Submit" onClick={handleClick} />
-      {/* <button >
-        {' '}
-        Generate Sleep Schedule to your Google Calendar
-      </button> */}
     </div>
   )
 }
