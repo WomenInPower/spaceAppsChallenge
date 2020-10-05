@@ -131,8 +131,9 @@ const AddToCalendar = () => {
           dateTime: '2020-10-05T17:00:00-04:00',
         },
       }
-      console.log(sleepEvent)
       */
+
+      console.log(sleepEvent)
 
       // Inserts the event (hard coded for now) to the authorized calendar
       const request = gapi.client.calendar.events.insert({
