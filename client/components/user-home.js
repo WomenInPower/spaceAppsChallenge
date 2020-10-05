@@ -2,32 +2,35 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import useScript from './use-script'
+import AddToCalendar from './calendar-add'
 
 /**
  * COMPONENT
  */
-export const UserHome = props => {
+export const UserHome = (props) => {
   const {email} = props
-  useScript("https://public.tockify.com/browser/embed.js" );
+  useScript('https://public.tockify.com/browser/embed.js')
 
   return (
     <div>
       <h3>Welcome, {email}</h3>
-      <div data-tockify-component="calendar" data-tockify-calendar="powersleep" />
-
+      <div
+        data-tockify-component="calendar"
+        data-tockify-calendar="powersleep"
+      />
+      <AddToCalendar />
     </div>
   )
 }
 
 /* <script data-cfasync="false" data-tockify-script="embed" src="https://public.tockify.com/browser/embed.js" /> */
 
-
 /**
  * CONTAINER
  */
-const mapState = state => {
+const mapState = (state) => {
   return {
-    email: state.user.email
+    email: state.user.email,
   }
 }
 
@@ -37,5 +40,5 @@ export default connect(mapState)(UserHome)
  * PROP TYPES
  */
 UserHome.propTypes = {
-  email: PropTypes.string
+  email: PropTypes.string,
 }
