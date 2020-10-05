@@ -80,12 +80,11 @@ const AddToCalendar = () => {
         }
       }
     })
-    console.log(sleepEvent)
     return sleepEvent
   }
 
   // function that handles whenever we click on a "add event to my calendar" type of button
-  const handleClick = async () => {
+  const handleClick = () => {
     gapi.load('client:auth2', async () => {
       gapi.client.init({
         apiKey: API_KEY,
@@ -117,13 +116,11 @@ const AddToCalendar = () => {
         })
 
       console.log(sleepEvent)
-
       // Inserts the event (hard coded for now) to the authorized calendar
       const request = gapi.client.calendar.events.insert({
         calendarId: 'primary',
         resource: sleepEvent,
       })
-
     })
   }
 
