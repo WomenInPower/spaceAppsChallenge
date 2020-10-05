@@ -1,5 +1,8 @@
+import React from 'react'
+import moment from 'moment-timezone'
+
 // Google Calendar API
-const addToCalendar = () => {
+const AddToCalendar = () => {
   // Initializing all of the variables
   const gapi = window.gapi
   const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
@@ -12,6 +15,79 @@ const addToCalendar = () => {
   ]
   // Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
   const SCOPES = 'https://www.googleapis.com/auth/calendar.events'
+
+  function sleepShift(events) {
+    let sleepEvent = {summary: 'Sleep', start: {}, end: {}}
+    events.forEach((event) => {
+      // if the event is flight on earth
+      if (event.summary === 'Flight Houston-Florida') {
+        let startDate = moment
+          .tz(event.start.dateTime, event.start.timeZone)
+          .date()
+        let endDate = moment.tz(event.end.dateTime, event.end.timeZone).date()
+        console.log('startDate:', startDate, 'endDate:', endDate)
+
+        let startTime = moment
+          .tz(event.start.dateTime, event.start.timeZone)
+          .hours()
+        let endTime = moment.tz(event.end.dateTime, event.end.timeZone).hours()
+        console.log('startTime:', startTime, 'endTime:', endTime)
+        // if the event is on the same day, we can extract the dates using moment.js
+        if (startDate === endDate) {
+          let emptyBlock = 24 - (endTime - startTime + 4)
+          console.log('Empty Time Block:', emptyBlock)
+          let start
+          let end
+          let poss1 = Math.abs(0 - (startTime - 2))
+          let poss2 = Math.abs(23 - startTime)
+          console.log(
+            'Possible SleepHour 1:',
+            poss1,
+            'Possible SleepHour 2:',
+            poss2
+          )
+          const hourToStartSleep = poss1 < poss2 ? startTime : 0
+          console.log('Sleep at:', hourToStartSleep)
+          const hourToEndSleep = hourToStartSleep + 8
+          console.log('Wake up at:', hourToEndSleep)
+          // then convert the hour back to Google calendar timestamp format using moment.js
+          if (hourToStartSleep < 10) {
+            start =
+              event.start.dateTime.slice(0, 11) +
+              '0' +
+              hourToStartSleep +
+              event.start.dateTime.slice(13)
+          } else {
+            start =
+              event.start.dateTime.slice(0, 11) +
+              hourToStartSleep +
+              event.start.dateTime.slice(13)
+          }
+          if (hourToEndSleep < 10) {
+            end =
+              event.end.dateTime.slice(0, 11) +
+              '0' +
+              hourToEndSleep +
+              event.end.dateTime.slice(13)
+          } else {
+            end =
+              event.end.dateTime.slice(0, 11) +
+              hourToEndSleep +
+              event.end.dateTime.slice(13)
+          }
+          sleepEvent.start.dateTime = start
+          sleepEvent.end.dateTime = end
+          // else if the event ends on the next day
+        }
+        // else {
+        // }
+        // if the event is launch from earch to ISS
+        // } else if (event.summary === 'Launch'){
+      }
+    })
+    console.log(sleepEvent)
+    return sleepEvent
+  }
 
   // function that handles whenever we click on a "add event to my calendar" type of button
   const handleClick = async () => {
@@ -27,34 +103,42 @@ const addToCalendar = () => {
 
       await gapi.auth2.getAuthInstance().signIn()
 
+      let sleepEvent
+      // get events
+      gapi.client.calendar.events
+        .list({
+          calendarId: 'primary',
+          timeMin: new Date().toISOString(),
+          showDeleted: false,
+          singleEvents: true,
+          maxResults: 10,
+          orderBy: 'startTime',
+        })
+        .then((response) => {
+          const events = response.result.items
+          sleepEvent = sleepShift(events)
+          console.log(sleepEvent)
+          console.log('EVENTS: ', events)
+        })
       // hard-coded event (in the future we will pull event info from algo)
-      const event = {
-        summary: 'NASA Hackathon',
-        location: 'Virtual, anywhere in the world',
-        description: 'Leave your print in the future of space exploration!',
+
+      /*sleepEvent = {
+        summary: 'sleep',
         start: {
-          dateTime: '2020-10-03T09:00:00-05:00',
-          timeZone: 'America/New_York',
+          dateTime: '2020-10-05T09:00:00-04:00',
         },
         end: {
-          dateTime: '2020-10-04T23:59:00-05:00',
-          timeZone: 'America/New_York',
-        },
-        recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-        attendees: [{email: 'lpage@example.com'}, {email: 'sbrin@example.com'}],
-        reminders: {
-          useDefault: false,
-          overrides: [
-            {method: 'email', minutes: 24 * 60},
-            {method: 'popup', minutes: 10},
-          ],
+          dateTime: '2020-10-05T17:00:00-04:00',
         },
       }
+      */
+
+      console.log(sleepEvent)
 
       // Inserts the event (hard coded for now) to the authorized calendar
       const request = gapi.client.calendar.events.insert({
         calendarId: 'primary',
-        resource: event,
+        resource: sleepEvent,
       })
       // Opens new tab with Google Calendar (might not need since we embedded)
       request.execute((event) => {
@@ -79,11 +163,45 @@ const addToCalendar = () => {
         */
     })
   }
+
+  return (
+    <div>
+      <button onClick={handleClick}>
+        {' '}
+        Generate Sleep Schedule to your Google Calendar
+      </button>
+    </div>
+  )
 }
 
-export default addToCalendar
+export default AddToCalendar
 
 /*
 TBD where we will have the button to add a sleeping event to the calendar
-<button onClick={handleClick}> Add event to your Google Calendar</button>
+<button onClick={handleClick}> Add Sleep Schedule to your Google Calendar</button>
+*/
+
+/*
+const event = {
+  summary: 'NASA Hackathon',
+  location: 'Virtual, anywhere in the world',
+  description: 'Leave your print in the future of space exploration!',
+  start: {
+    dateTime: '2020-10-03T09:00:00-05:00',
+    timeZone: 'America/New_York',
+  },
+  end: {
+    dateTime: '2020-10-04T23:59:00-05:00',
+    timeZone: 'America/New_York',
+  },
+  recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
+  attendees: [{email: 'lpage@example.com'}, {email: 'sbrin@example.com'}],
+  reminders: {
+    useDefault: false,
+    overrides: [
+      {method: 'email', minutes: 24 * 60},
+      {method: 'popup', minutes: 10},
+    ],
+  },
+}
 */
