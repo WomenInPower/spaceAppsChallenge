@@ -85,12 +85,11 @@ const AddToCalendar = () => {
         // } else if (event.summary === 'Launch'){
       }
     })
-    console.log(sleepEvent)
     return sleepEvent
   }
 
   // function that handles whenever we click on a "add event to my calendar" type of button
-  const handleClick = async () => {
+  const handleClick = () => {
     gapi.load('client:auth2', async () => {
       gapi.client.init({
         apiKey: API_KEY,
@@ -104,37 +103,21 @@ const AddToCalendar = () => {
       await gapi.auth2.getAuthInstance().signIn()
 
       let sleepEvent
-      // get events
-      gapi.client.calendar.events
-        .list({
-          calendarId: 'primary',
-          timeMin: new Date().toISOString(),
-          showDeleted: false,
-          singleEvents: true,
-          maxResults: 10,
-          orderBy: 'startTime',
-        })
-        .then((response) => {
-          const events = response.result.items
-          sleepEvent = sleepShift(events)
-          console.log(sleepEvent)
-          console.log('EVENTS: ', events)
-        })
-      // hard-coded event (in the future we will pull event info from algo)
+      // get all events of the calendar in the developer console
+      const response = await gapi.client.calendar.events.list({
+        calendarId: 'primary',
+        timeMin: new Date().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: 'startTime',
+      })
 
-      /*sleepEvent = {
-        summary: 'sleep',
-        start: {
-          dateTime: '2020-10-05T09:00:00-04:00',
-        },
-        end: {
-          dateTime: '2020-10-05T17:00:00-04:00',
-        },
-      }
-      */
+      const events = response.result.items
+      sleepEvent = sleepShift(events)
+      console.log('EVENTS: ', events)
 
       console.log(sleepEvent)
-
       // Inserts the event (hard coded for now) to the authorized calendar
       const request = gapi.client.calendar.events.insert({
         calendarId: 'primary',
@@ -144,23 +127,6 @@ const AddToCalendar = () => {
       request.execute((event) => {
         window.open(event.htmlLink)
       })
-
-      // get all events of the calendar in the developer console
-      /*
-      gapi.client.calendar.events
-        .list({
-          calendarId: 'primary',
-          timeMin: new Date().toISOString(),
-          showDeleted: false,
-          singleEvents: true,
-          maxResults: 10,
-          orderBy: 'startTime',
-        })
-        .then((response) => {
-          const events = response.result.items
-          console.log('EVENTS: ', events)
-        })
-        */
     })
   }
 
@@ -175,33 +141,3 @@ const AddToCalendar = () => {
 }
 
 export default AddToCalendar
-
-/*
-TBD where we will have the button to add a sleeping event to the calendar
-<button onClick={handleClick}> Add Sleep Schedule to your Google Calendar</button>
-*/
-
-/*
-const event = {
-  summary: 'NASA Hackathon',
-  location: 'Virtual, anywhere in the world',
-  description: 'Leave your print in the future of space exploration!',
-  start: {
-    dateTime: '2020-10-03T09:00:00-05:00',
-    timeZone: 'America/New_York',
-  },
-  end: {
-    dateTime: '2020-10-04T23:59:00-05:00',
-    timeZone: 'America/New_York',
-  },
-  recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
-  attendees: [{email: 'lpage@example.com'}, {email: 'sbrin@example.com'}],
-  reminders: {
-    useDefault: false,
-    overrides: [
-      {method: 'email', minutes: 24 * 60},
-      {method: 'popup', minutes: 10},
-    ],
-  },
-}
-*/
