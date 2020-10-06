@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import ReactModal from 'react-modal'
 import {connect} from 'react-redux'
-import {addSleepEvent, generateSleepEvents, loadEvents} from '../store/calendar'
+import {generateSleepEvents, loadEvents} from '../store/calendar'
 
 export const gapi = window.gapi
 export const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
@@ -23,9 +23,10 @@ class AddToCalendar extends Component {
     }
     this.handleClick = this.handleClick.bind(this)
     this.openModal = this.openModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
   componentDidMount() {
-    loadEvents()
+    this.props.loadEvents()
     ReactModal.setAppElement('body')
   }
 
@@ -33,15 +34,20 @@ class AddToCalendar extends Component {
     this.setState({showModal: true})
     this.props.generateSleepEvents(this.props.events)
   }
+  closeModal() {
+    this.setState({showModal: false})
+  }
 
   handleClick(sleepEvent) {
-    this.props.addSleepEvent(sleepEvent)
+    const request = gapi.client.calendar.events.insert({
+      calendarId: 'primary',
+      resource: sleepEvent,
+    })
+    request.execute()
   }
 
   render() {
     const {events} = this.props
-    console.log(this.props)
-
     return (
       <div>
         <input
@@ -49,25 +55,46 @@ class AddToCalendar extends Component {
           src="images/sleep.png"
           border="0"
           alt="Submit"
-          onClick={() => this.openModal()}
+          onClick={this.openModal}
         />
 
-        <ReactModal className="popup" isOpen={this.state.showModal}>
-          {events.map((sleepEvent, i) => (
-            <div key={i}>
-              From {sleepEvent.start.dateTime}
-              to {sleepEvent.end.dateTime}
-              <button
-                type="button"
-                onClick={(sleepEvent) => this.handleClick(sleepEvent)}
-              >
-                Add to Calendar
-              </button>
-            </div>
-          ))}
-          <button type="button" onClick={this.closeModal}>
-            Done
-          </button>
+        <ReactModal className="modal-content" isOpen={this.state.showModal}>
+          {events.map((sleepEvent, i) => {
+            return (
+              <div key={i}>
+                {sleepEvent.summary === 'nap' ? (
+                  <div>
+                    <p> Napping:</p>
+                    From {sleepEvent.start.dateTime} to{' '}
+                    {sleepEvent.end.dateTime}
+                    <button
+                      type="button"
+                      onClick={() => this.handleClick(sleepEvent)}
+                    >
+                      Add to Calendar
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <p>Full 8-hour Sleep Cycle:</p>
+                    From {sleepEvent.start.dateTime} to{' '}
+                    {sleepEvent.end.dateTime}
+                    <button
+                      type="button"
+                      onClick={() => this.handleClick(sleepEvent)}
+                    >
+                      Add to Calendar
+                    </button>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+          <p>
+            <button type="button" onClick={this.closeModal}>
+              Done
+            </button>
+          </p>
         </ReactModal>
       </div>
     )
@@ -75,6 +102,11 @@ class AddToCalendar extends Component {
 }
 
 const mapState = ({events}) => ({events})
-const mapDispatch = {generateSleepEvents, loadEvents, addSleepEvent}
+const mapDispatch = (dispatch) => {
+  return {
+    generateSleepEvents: (events) => dispatch(generateSleepEvents(events)),
+    loadEvents: () => dispatch(loadEvents()),
+  }
+}
 
 export default connect(mapState, mapDispatch)(AddToCalendar)

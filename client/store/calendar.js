@@ -43,40 +43,37 @@ const getSleepEvents = (events) => ({type: GET_SLEEP_EVENTS, events})
  */
 export const loadEvents = () => (dispatch) => {
   gapi.load('client:auth2', async () => {
-    gapi.client.init({
-      apiKey: API_KEY,
-      clientId: CLIENT_ID,
-      discoveryDocs: DISCOVERY_DOCS,
-      scope: SCOPES,
-    })
-    gapi.client.load('calendar', 'v3', () => {})
+    try {
+      gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        discoveryDocs: DISCOVERY_DOCS,
+        scope: SCOPES,
+      })
+      gapi.client.load('calendar', 'v3', () => {})
+      await gapi.auth2.getAuthInstance().signIn()
 
-    // get all events of the calendar in the developer console
-    const response = await gapi.client.calendar.events.list({
-      calendarId: 'primary',
-      timeMin: new Date().toISOString(),
-      showDeleted: false,
-      singleEvents: true,
-      maxResults: 10,
-      orderBy: 'startTime',
-    })
-    const events = response.result.items
-    console.log('EVENTS: ', events)
-    dispatch(getEvents(events || defaultEvents))
+      // get all events of the calendar in the developer console
+      const response = await gapi.client.calendar.events.list({
+        calendarId: 'primary',
+        timeMin: new Date().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: 'startTime',
+      })
+      const events = response.result.items
+      console.log('EVENTS: ', events)
+      dispatch(getEvents(events || defaultEvents))
+    } catch (e) {
+      console.log(e)
+    }
   })
 }
 
 export const generateSleepEvents = (events) => (dispatch) => {
   const sleepEvents = numbersToEvents(events)
   dispatch(getSleepEvents(sleepEvents || defaultEvents))
-}
-
-export const addSleepEvent = (sleepEvent) => {
-  const request = gapi.client.calendar.events.insert({
-    calendarId: 'primary',
-    resource: sleepEvent,
-  })
-  request.execute()
 }
 
 /**
@@ -95,7 +92,7 @@ export default function (state = defaultEvents, action) {
 
 function sleepShift(events) {
   let map = UTCToNumbers(events)
-  console.log(map)
+  // console.log(map)
   let sleepEvents = {nap: [], fullCycle: []}
   let fullCycleOptions = []
   let napOptions = []
@@ -151,7 +148,7 @@ function UTCToNumbers(events) {
 function numbersToEvents(events) {
   let sleepOptions = []
   let sleepEvents = sleepShift(events)
-  console.log('sleepEvents:', sleepEvents)
+  // console.log('sleepEvents:', sleepEvents)
 
   for (let i = 0; i < sleepEvents.nap.length; i++) {
     let nap = {summary: 'nap', start: {}, end: {}}

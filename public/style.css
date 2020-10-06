@@ -53,3 +53,10 @@ input {
   margin-left: 34rem;
   margin-right: 34rem;
 }
+
+.modal-content {
+  color: black;
+  align-self: center;
+  width: 500px;
+  height: 400px;
+}
