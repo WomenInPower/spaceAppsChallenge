@@ -77,12 +77,7 @@ const AddToCalendar = () => {
           }
           sleepEvent.start.dateTime = start
           sleepEvent.end.dateTime = end
-          // else if the event ends on the next day
         }
-        // else {
-        // }
-        // if the event is launch from earch to ISS
-        // } else if (event.summary === 'Launch'){
       }
     })
     return sleepEvent
@@ -103,19 +98,22 @@ const AddToCalendar = () => {
       await gapi.auth2.getAuthInstance().signIn()
 
       let sleepEvent
-      // get all events of the calendar in the developer console
-      const response = await gapi.client.calendar.events.list({
-        calendarId: 'primary',
-        timeMin: new Date().toISOString(),
-        showDeleted: false,
-        singleEvents: true,
-        maxResults: 10,
-        orderBy: 'startTime',
-      })
-
-      const events = response.result.items
-      sleepEvent = sleepShift(events)
-      console.log('EVENTS: ', events)
+      // get events
+      gapi.client.calendar.events
+        .list({
+          calendarId: 'primary',
+          timeMin: new Date().toISOString(),
+          showDeleted: false,
+          singleEvents: true,
+          maxResults: 10,
+          orderBy: 'startTime',
+        })
+        .then((response) => {
+          const events = response.result.items
+          sleepEvent = sleepShift(events)
+          console.log(sleepEvent)
+          console.log('EVENTS: ', events)
+        })
 
       console.log(sleepEvent)
       // Inserts the event (hard coded for now) to the authorized calendar
@@ -123,16 +121,18 @@ const AddToCalendar = () => {
         calendarId: 'primary',
         resource: sleepEvent,
       })
-      // Opens new tab with Google Calendar (might not need since we embedded)
-      request.execute((event) => {
-        window.open(event.htmlLink)
-      })
     })
   }
 
   return (
     <div>
-      <button onClick={handleClick}> Generate My Sleep Schedule</button>
+      <input
+        type="image"
+        src="images/sleep.png"
+        border="0"
+        alt="Submit"
+        onClick={handleClick}
+      />
     </div>
   )
 }

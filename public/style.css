@@ -12,6 +12,13 @@ label {
   display: block;
 }
 
+content {
+  margin-left: 6rem;
+  margin-right: 10rem;
+  display: inline-block;
+  text-align: justify;
+}
+
 nav a {
   display: inline-block;
   margin: 1em;
@@ -41,6 +48,8 @@ h3 {
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
-iframe {
-  border-width: 0;
+input {
+  align-items: center;
+  margin-left: 34rem;
+  margin-right: 34rem;
 }
