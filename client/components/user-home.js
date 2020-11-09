@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import AddToCalendar from './calendar-add'
 import {Calendar, momentLocalizer} from 'react-big-calendar'
 import moment from 'moment'
-import '!style-loader!css-loader!react-big-calendar/lib/css/react-big-calendar.css'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 // a localizer for BigCalendar
 const localizer = momentLocalizer(moment)
@@ -18,13 +18,13 @@ export const UserHome = (props) => {
   return (
     <div>
       <h3>Welcome, {email}</h3>
-      {/* <Calendar
+      <Calendar
         localizer={localizer}
         events={[]}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 500 }}
-      /> */}
+        style={{height: 500}}
+      />
       <AddToCalendar />
     </div>
   )

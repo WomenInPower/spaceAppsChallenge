@@ -41,10 +41,11 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        // use: [{ loader: 'style-loader' },
-        // { loader: 'css-loader' },
-        // { loader: 'babel-loader' }]
+        use: 'babel-loader',
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
