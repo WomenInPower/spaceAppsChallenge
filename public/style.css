@@ -53,3 +53,6 @@ input {
   margin-left: 34rem;
   margin-right: 34rem;
 }
+
+@import 'react-big-calendar/lib/sass/styles';
+@import 'react-big-calendar/lib/addons/dragAndDrop/styles';
