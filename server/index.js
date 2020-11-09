@@ -9,8 +9,8 @@ const db = require('./db')
 const https = require('https')
 const http = require('http')
 const fs = require('fs')
+if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 
-require('dotenv').config()
 const PORT = process.env.PORT || 8080
 const TLS_KEY = process.env.TLS_KEY || ''
 const TLS_CERT = process.env.TLS_CERT || ''
@@ -34,7 +34,6 @@ if (process.env.NODE_ENV === 'test') {
  * keys as environment variables, so that they can still be read by the
  * Node process on process.env
  */
-if (process.env.NODE_ENV !== 'production') require('../secrets')
 
 // passport registration
 passport.serializeUser((user, done) => done(null, user.id))
