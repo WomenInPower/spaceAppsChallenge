@@ -54,9 +54,5 @@ input {
   margin-right: 34rem;
 }
 
-.modal-content {
-  color: black;
-  align-self: center;
-  width: 500px;
-  height: 400px;
-}
+@import 'react-big-calendar/lib/sass/styles';
+@import 'react-big-calendar/lib/addons/dragAndDrop/styles';

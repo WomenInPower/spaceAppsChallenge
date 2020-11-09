@@ -1,23 +1,30 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import useScript from './use-script'
 import AddToCalendar from './calendar-add'
+import {Calendar, momentLocalizer} from 'react-big-calendar'
+import moment from 'moment'
+import '!style-loader!css-loader!react-big-calendar/lib/css/react-big-calendar.css'
+
+// a localizer for BigCalendar
+const localizer = momentLocalizer(moment)
 
 /**
  * COMPONENT
  */
 export const UserHome = (props) => {
   const {email} = props
-  useScript('https://public.tockify.com/browser/embed.js')
 
   return (
     <div>
       <h3>Welcome, {email}</h3>
-      <div
-        data-tockify-component="calendar"
-        data-tockify-calendar="powersleep"
-      />
+      {/* <Calendar
+        localizer={localizer}
+        events={[]}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 500 }}
+      /> */}
       <AddToCalendar />
     </div>
   )
