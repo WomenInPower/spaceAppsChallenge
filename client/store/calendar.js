@@ -49,6 +49,7 @@ export const loadEvents = () => (dispatch) => {
       const events = response.result.items
       console.log('EVENTS: ', events)
       dispatch(getEvents(events || defaultEvents))
+      // return response.result.items
     } catch (e) {
       console.log(e)
     }

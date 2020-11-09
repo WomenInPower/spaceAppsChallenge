@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import Modal from 'styled-react-modal'
 import {connect} from 'react-redux'
-import {loadEvents} from '../store/calendar'
 import {numbersToEvents} from './sleepAlgorithm'
 
 export const gapi = window.gapi
@@ -38,9 +37,9 @@ class AddToCalendar extends Component {
     this.openModal = this.openModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
   }
-  async componentDidMount() {
-    await this.props.loadEvents()
-  }
+  // async componentDidMount() {
+  //   await this.props.loadEvents()
+  // }
 
   openModal() {
     this.setState({showModal: true})
@@ -127,10 +126,10 @@ class AddToCalendar extends Component {
 }
 
 const mapState = ({events}) => ({events})
-const mapDispatch = (dispatch) => {
-  return {
-    loadEvents: () => dispatch(loadEvents()),
-  }
-}
+// const mapDispatch = (dispatch) => {
+//   return {
+//     loadEvents: () => dispatch(loadEvents()),
+//   }
+// }
 
-export default connect(mapState, mapDispatch)(AddToCalendar)
+export default connect(mapState)(AddToCalendar)

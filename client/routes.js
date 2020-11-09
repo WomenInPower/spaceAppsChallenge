@@ -9,8 +9,16 @@ import {me, loadEvents} from './store'
  * COMPONENT
  */
 class Routes extends Component {
-  componentDidMount() {
-    this.props.loadInitialData()
+  constructor() {
+    super()
+    this.state = {
+      events: [],
+    }
+  }
+
+  async componentDidMount() {
+    await this.props.loadInitialData()
+    // this.setState({ events })
   }
 
   render() {
@@ -49,7 +57,7 @@ const mapDispatch = (dispatch) => {
   return {
     loadInitialData() {
       dispatch(me())
-      // dispatch(loadEvents())
+      dispatch(loadEvents())
     },
   }
 }
