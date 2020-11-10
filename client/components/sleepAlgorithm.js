@@ -54,30 +54,7 @@ export function UTCToNumbers(events) {
 
 // then convert the hour back to Google calendar timestamp, map timestamp to sleepEvent
 export function numbersToEvents(events) {
-  let sleepOptions = [
-    {
-      summary: 'nap',
-      start: {
-        dateTime: '2020-11-09T10:00:00-05:00',
-        timeZone: 'America/New_York',
-      },
-      end: {
-        dateTime: '2020-11-09T12:00:00-05:00',
-        timeZone: 'America/New_York',
-      },
-    },
-    {
-      summary: 'nap',
-      start: {
-        dateTime: '2020-11-09T14:00:00-05:00',
-        timeZone: 'America/New_York',
-      },
-      end: {
-        dateTime: '2020-11-09T16:00:00-05:00',
-        timeZone: 'America/New_York',
-      },
-    },
-  ]
+  let sleepOptions = []
   let sleepEvents = sleepShift(events)
   // console.log('sleepEvents:', sleepEvents)
 
