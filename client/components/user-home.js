@@ -8,6 +8,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import {loadEvents} from '../store/calendar'
 // a localizer for BigCalendar
 const localizer = momentLocalizer(moment)
+
 /**
  * COMPONENT
  */
@@ -18,6 +19,7 @@ export class UserHome extends Component {
   render() {
     const {firstName, lastName, email} = this.props.user
     const {events} = this.props
+    console.log('Events in React Component: ', events)
 
     return (
       <div>
@@ -32,7 +34,7 @@ export class UserHome extends Component {
             style={{height: 500}}
             events={events}
             defaultView="month"
-            // defaultDate={new Date(moment().startOf('day'))}
+            defaultDate={new Date(moment().startOf('day'))}
           />
         )}
         <AddToCalendar />

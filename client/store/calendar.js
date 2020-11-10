@@ -51,9 +51,9 @@ export const loadEvents = () => (dispatch) => {
         event = {
           ...event,
           title: event.summary,
-          start: event.start.dateTime,
+          start: new Date(event.start.dateTime.toString()),
           startTimeZone: event.start.timeZone,
-          end: event.end.dateTime,
+          end: new Date(event.end.dateTime.toString()),
           endTimeZone: event.end.timeZone,
         }
         return event
