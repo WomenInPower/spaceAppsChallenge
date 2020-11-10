@@ -84,14 +84,13 @@ class AddToCalendar extends Component {
                 'LLLL'
               )
               const sleepEnd = moment(sleepEvent.end.dateTime).format('LLLL')
-              console.log(napStart)
 
               return (
                 <div key={i}>
                   {sleepEvent.summary === 'nap' ? (
                     <div>
                       <p>Napping:</p>
-                      From {`${napStart}`} to {`${napEnd}`}
+                      From {napStart} to {napEnd}
                       <p>
                         <button
                           type="button"
@@ -104,7 +103,7 @@ class AddToCalendar extends Component {
                   ) : (
                     <div>
                       <p>Full 8-hour Sleep Cycle:</p>
-                      From {`${sleepStart}`} to {`${sleepEnd}`}
+                      From {sleepStart} to {sleepEnd}
                       <p>
                         <button
                           type="button"
