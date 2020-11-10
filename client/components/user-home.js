@@ -40,7 +40,7 @@ export class UserHome extends Component {
             localizer={localizer}
             startAccessor="start"
             endAccessor="end"
-            style={{height: 500}}
+            // style={{height: 500}}
             events={events}
             defaultView="month"
             defaultDate={new Date(moment().startOf('day'))}
