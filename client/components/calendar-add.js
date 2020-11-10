@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Modal from 'styled-react-modal'
 import {connect} from 'react-redux'
 import {numbersToEvents} from './sleepAlgorithm'
+import moment from 'moment'
 
 export const gapi = window.gapi
 export const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
@@ -19,11 +20,12 @@ const StyledModal = Modal.styled`
   display: flex;
   color: black;
   padding: 40px;
-  flex-flow: column wrap;
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
   background-color: white;
   opacity: 85%;
+  overlfow-y: auto;
 `
 
 class AddToCalendar extends Component {
@@ -37,9 +39,6 @@ class AddToCalendar extends Component {
     this.openModal = this.openModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
   }
-  // async componentDidMount() {
-  //   await this.props.loadEvents()
-  // }
 
   openModal() {
     this.setState({showModal: true})
@@ -74,19 +73,24 @@ class AddToCalendar extends Component {
 
         <StyledModal
           isOpen={this.state.showModal}
-          allowScroll="true"
           onBackgroundClick={this.closeModal}
           onEscapeKeydown={this.closeModal}
         >
           {sleepEvents &&
             sleepEvents.map((sleepEvent, i) => {
+              const napStart = moment(sleepEvent.start.dateTime).format('LLLL')
+              const napEnd = moment(sleepEvent.end.dateTime).format('LLLL')
+              const sleepStart = moment(sleepEvent.start.dateTime).format(
+                'LLLL'
+              )
+              const sleepEnd = moment(sleepEvent.end.dateTime).format('LLLL')
+
               return (
                 <div key={i}>
                   {sleepEvent.summary === 'nap' ? (
                     <div>
                       <p>Napping:</p>
-                      From {sleepEvent.start.dateTime} to{' '}
-                      {sleepEvent.end.dateTime}
+                      From {napStart} to {napEnd}
                       <p>
                         <button
                           type="button"
@@ -99,8 +103,7 @@ class AddToCalendar extends Component {
                   ) : (
                     <div>
                       <p>Full 8-hour Sleep Cycle:</p>
-                      From {sleepEvent.start.dateTime} to{' '}
-                      {sleepEvent.end.dateTime}
+                      From {sleepStart} to {sleepEnd}
                       <p>
                         <button
                           type="button"
@@ -126,10 +129,5 @@ class AddToCalendar extends Component {
 }
 
 const mapState = ({events}) => ({events})
-// const mapDispatch = (dispatch) => {
-//   return {
-//     loadEvents: () => dispatch(loadEvents()),
-//   }
-// }
 
 export default connect(mapState)(AddToCalendar)

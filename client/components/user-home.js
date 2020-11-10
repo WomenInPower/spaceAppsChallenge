@@ -1,41 +1,32 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+import moment from 'moment-timezone'
 import AddToCalendar from './calendar-add'
 import {Calendar, momentLocalizer} from 'react-big-calendar'
-import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import {loadEvents} from '../store/calendar'
+// a localizer for BigCalendar
+const localizer = momentLocalizer(moment)
 
 /**
  * COMPONENT
  */
 export class UserHome extends Component {
-  constructor() {
-    super()
-    this.state = {
-      events: [],
-    }
-  }
-
   async componentDidMount() {
-    const {events} = this.props
     await this.props.loadEvents()
-    // this.setState({ events })
   }
   render() {
     const {firstName, lastName, email} = this.props.user
     const {events} = this.props
-    console.log('Google Calender Schedule:', events)
-    // a localizer for BigCalendar
-    const localizer = momentLocalizer(moment)
+    console.log('Events in React Component: ', events)
 
     return (
       <div>
         <h3>
           Welcome, {firstName} {lastName}!
         </h3>
-        {events ? (
+        {events && (
           <Calendar
             localizer={localizer}
             startAccessor="start"
@@ -45,8 +36,6 @@ export class UserHome extends Component {
             defaultView="month"
             defaultDate={new Date(moment().startOf('day'))}
           />
-        ) : (
-          'You currently have no events'
         )}
         <AddToCalendar />
       </div>

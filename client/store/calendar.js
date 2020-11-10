@@ -34,8 +34,8 @@ export const loadEvents = () => (dispatch) => {
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES,
       })
-      gapi.client.load('calendar', 'v3', () => {})
       await gapi.auth2.getAuthInstance().signIn()
+      gapi.client.load('calendar', 'v3', () => {})
 
       // get all events of the calendar in the developer console
       const response = await gapi.client.calendar.events.list({
@@ -46,10 +46,20 @@ export const loadEvents = () => (dispatch) => {
         maxResults: 10,
         orderBy: 'startTime',
       })
-      const events = response.result.items
+      let events = response.result.items
+      events = events.map((event) => {
+        event = {
+          ...event,
+          title: event.summary,
+          start: new Date(event.start.dateTime.toString()),
+          startTimeZone: event.start.timeZone,
+          end: new Date(event.end.dateTime.toString()),
+          endTimeZone: event.end.timeZone,
+        }
+        return event
+      })
       console.log('EVENTS: ', events)
       dispatch(getEvents(events || defaultEvents))
-      // return response.result.items
     } catch (e) {
       console.log(e)
     }
