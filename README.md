@@ -2,6 +2,8 @@
 
 Sleep Shift Scheduling Tool developed for the Space Apps Challenge 2020 from NASA.
 
+📺 [View screen cast here](https://www.youtube.com/watch?v=E6GZZHmnJvU)📺
+
 ## 🌌 Prompt:
 
 "Sleep loss and fatigue may lead to reduced performance and an increased risk to safety during many activities, including spaceflight. Your challenge is to develop an operational sleep shift scheduling tool that provides autonomous customization of a schedule for sleep, exercise, and nutrition to manage fatigue."
