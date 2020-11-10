@@ -19,11 +19,12 @@ const StyledModal = Modal.styled`
   display: flex;
   color: black;
   padding: 40px;
-  flex-flow: column wrap;
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
   background-color: white;
   opacity: 85%;
+  overlfow-y: auto;
 `
 
 class AddToCalendar extends Component {
@@ -37,9 +38,6 @@ class AddToCalendar extends Component {
     this.openModal = this.openModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
   }
-  // async componentDidMount() {
-  //   await this.props.loadEvents()
-  // }
 
   openModal() {
     this.setState({showModal: true})
@@ -74,7 +72,6 @@ class AddToCalendar extends Component {
 
         <StyledModal
           isOpen={this.state.showModal}
-          allowScroll="true"
           onBackgroundClick={this.closeModal}
           onEscapeKeydown={this.closeModal}
         >
@@ -126,10 +123,5 @@ class AddToCalendar extends Component {
 }
 
 const mapState = ({events}) => ({events})
-// const mapDispatch = (dispatch) => {
-//   return {
-//     loadEvents: () => dispatch(loadEvents()),
-//   }
-// }
 
 export default connect(mapState)(AddToCalendar)

@@ -37,14 +37,12 @@ export function sleepShift(events) {
 export function UTCToNumbers(events) {
   let map = {dates: [], time: []}
   events.forEach((event) => {
-    let startDate = moment.tz(event.start.dateTime, event.start.timeZone).date()
-    let endDate = moment.tz(event.end.dateTime, event.end.timeZone).date()
+    let startDate = moment.tz(event.start, event.startTimeZone).date()
+    let endDate = moment.tz(event.end, event.endTimeZone).date()
     // console.log('startDate:', startDate, 'endDate:', endDate)
 
-    let startHour = moment
-      .tz(event.start.dateTime, event.start.timeZone)
-      .hours()
-    let endHour = moment.tz(event.end.dateTime, event.end.timeZone).hours()
+    let startHour = moment.tz(event.start, event.startTimeZone).hours()
+    let endHour = moment.tz(event.end, event.endTimeZone).hours()
     // console.log('startHour:', startHour, 'endHour:', endHour)
 
     map.dates.push(startDate, endDate)
@@ -56,7 +54,30 @@ export function UTCToNumbers(events) {
 
 // then convert the hour back to Google calendar timestamp, map timestamp to sleepEvent
 export function numbersToEvents(events) {
-  let sleepOptions = []
+  let sleepOptions = [
+    {
+      summary: 'nap',
+      start: {
+        dateTime: '2020-11-09T10:00:00-05:00',
+        timeZone: 'America/New_York',
+      },
+      end: {
+        dateTime: '2020-11-09T12:00:00-05:00',
+        timeZone: 'America/New_York',
+      },
+    },
+    {
+      summary: 'nap',
+      start: {
+        dateTime: '2020-11-09T14:00:00-05:00',
+        timeZone: 'America/New_York',
+      },
+      end: {
+        dateTime: '2020-11-09T16:00:00-05:00',
+        timeZone: 'America/New_York',
+      },
+    },
+  ]
   let sleepEvents = sleepShift(events)
   // console.log('sleepEvents:', sleepEvents)
 
@@ -92,6 +113,6 @@ export function numbersToEvents(events) {
     if (i % 2) continue
     sleepOptions.push(sleep)
   }
-  console.log('sleepOptions:', sleepOptions)
-  return sleepOptions
+  // console.log('sleepOptions:', sleepOptions)
+  return sleepOptions.slice(0, 3)
 }
