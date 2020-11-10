@@ -83,11 +83,11 @@ export function numbersToEvents(events) {
 
   for (let i = 0; i < sleepEvents.nap.length; i++) {
     let nap = {summary: 'nap', start: {}, end: {}}
-    nap.start.dateTime = moment().set('hour', sleepEvents.nap[i]).format('LLLL')
+    nap.start.dateTime = moment().set('hour', sleepEvents.nap[i]).format()
     if (sleepEvents.nap[i + 1]) {
       nap.end.dateTime = moment()
         .set('hour', sleepEvents.nap[i + 1])
-        .format('LLLL')
+        .format()
     }
     if (i % 2) continue
     sleepOptions.push(nap)
@@ -96,7 +96,7 @@ export function numbersToEvents(events) {
     let sleep = {summary: 'sleep', start: {}, end: {}}
     sleep.start.dateTime = moment()
       .set('hour', sleepEvents.fullCycle[i])
-      .format('LLLL')
+      .format()
     if (
       sleepEvents.fullCycle[i + 1] &&
       sleepEvents.fullCycle[i + 1] < sleepEvents.fullCycle[i]
@@ -104,11 +104,11 @@ export function numbersToEvents(events) {
       sleep.end.dateTime = moment()
         .set('hour', sleepEvents.fullCycle[i + 1])
         .add(1, 'd')
-        .format('LLLL')
+        .format()
     } else if (sleepEvents.fullCycle[i + 1]) {
       sleep.end.dateTime = moment()
         .set('hour', sleepEvents.fullCycle[i + 1])
-        .format('LLLL')
+        .format()
     }
     if (i % 2) continue
     sleepOptions.push(sleep)

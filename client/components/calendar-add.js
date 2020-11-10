@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Modal from 'styled-react-modal'
 import {connect} from 'react-redux'
 import {numbersToEvents} from './sleepAlgorithm'
+import moment from 'moment'
 
 export const gapi = window.gapi
 export const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
@@ -77,13 +78,20 @@ class AddToCalendar extends Component {
         >
           {sleepEvents &&
             sleepEvents.map((sleepEvent, i) => {
+              const napStart = moment(sleepEvent.start.dateTime).format('LLLL')
+              const napEnd = moment(sleepEvent.end.dateTime).format('LLLL')
+              const sleepStart = moment(sleepEvent.start.dateTime).format(
+                'LLLL'
+              )
+              const sleepEnd = moment(sleepEvent.end.dateTime).format('LLLL')
+              console.log(napStart)
+
               return (
                 <div key={i}>
                   {sleepEvent.summary === 'nap' ? (
                     <div>
                       <p>Napping:</p>
-                      From {sleepEvent.start.dateTime} to{' '}
-                      {sleepEvent.end.dateTime}
+                      From {`${napStart}`} to {`${napEnd}`}
                       <p>
                         <button
                           type="button"
@@ -96,8 +104,7 @@ class AddToCalendar extends Component {
                   ) : (
                     <div>
                       <p>Full 8-hour Sleep Cycle:</p>
-                      From {sleepEvent.start.dateTime} to{' '}
-                      {sleepEvent.end.dateTime}
+                      From {`${sleepStart}`} to {`${sleepEnd}`}
                       <p>
                         <button
                           type="button"
