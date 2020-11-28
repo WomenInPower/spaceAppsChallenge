@@ -25,6 +25,7 @@ export default class SleepShiftSchedule {
       let startHour = moment.tz(event.start, event.startTimeZone).hours()
       let endHour = moment.tz(event.end, event.endTimeZone).hours()
 
+
       this.eventSet.add([summary, startDate, endDate, startHour, endHour])
     })
   }
