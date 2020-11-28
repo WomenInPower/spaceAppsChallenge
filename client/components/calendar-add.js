@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Modal from 'styled-react-modal'
 import {connect} from 'react-redux'
-import {numbersToEvents} from './sleepAlgorithm'
+import SleepShiftSchedule from './sleepAlgorithm'
 import moment from 'moment'
 
 export const gapi = window.gapi
@@ -42,7 +42,11 @@ class AddToCalendar extends Component {
 
   openModal() {
     this.setState({showModal: true})
-    const sleepEvents = numbersToEvents(this.props.events)
+    let sleepShiftSchedule = new SleepShiftSchedule(this.props.events)
+    sleepShiftSchedule.utcToNumbers()
+    sleepShiftSchedule.sleepShift()
+    const sleepEvents = sleepShiftSchedule.numbersToEvents()
+
     this.setState({sleepEvents})
   }
 
@@ -78,42 +82,21 @@ class AddToCalendar extends Component {
         >
           {sleepEvents &&
             sleepEvents.map((sleepEvent, i) => {
-              const napStart = moment(sleepEvent.start.dateTime).format('LLLL')
-              const napEnd = moment(sleepEvent.end.dateTime).format('LLLL')
-              const sleepStart = moment(sleepEvent.start.dateTime).format(
-                'LLLL'
-              )
-              const sleepEnd = moment(sleepEvent.end.dateTime).format('LLLL')
+              const zStart = moment(sleepEvent.start.dateTime).format('LLLL')
+              const zEnd = moment(sleepEvent.end.dateTime).format('LLLL')
 
               return (
                 <div key={i}>
-                  {sleepEvent.summary === 'nap' ? (
-                    <div>
-                      <p>Napping:</p>
-                      From {napStart} to {napEnd}
-                      <p>
-                        <button
-                          type="button"
-                          onClick={() => this.handleClick(sleepEvent)}
-                        >
-                          Add to Calendar
-                        </button>
-                      </p>
-                    </div>
-                  ) : (
-                    <div>
-                      <p>Full 8-hour Sleep Cycle:</p>
-                      From {sleepStart} to {sleepEnd}
-                      <p>
-                        <button
-                          type="button"
-                          onClick={() => this.handleClick(sleepEvent)}
-                        >
-                          Add to calendar
-                        </button>
-                      </p>
-                    </div>
-                  )}
+                  <p>Zzzzz:</p>
+                  From {zStart} to {zEnd}
+                  <p>
+                    <button
+                      type="button"
+                      onClick={() => this.handleClick(sleepEvent)}
+                    >
+                      Add to Calendar
+                    </button>
+                  </p>
                 </div>
               )
             })}
