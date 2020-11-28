@@ -17,30 +17,46 @@ export default class SleepShiftSchedule {
   // covert all the Google Calendar timestamp to numbers for calculations
   utcToNumbers() {
     this.events.forEach((event) => {
-      let startDate = moment
-        .tz(event.start.dateTime, event.start.timeZone)
-        .date()
-      let endDate = moment.tz(event.end.dateTime, event.end.timeZone).date()
-      // console.log('startDate:', startDate, 'endDate:', endDate)
+      let summary = event.summary
 
-      let startHour = moment
-        .tz(event.start.dateTime, event.start.timeZone)
-        .hours()
-      let endHour = moment.tz(event.end.dateTime, event.end.timeZone).hours()
-      // console.log('startHour:', startHour, 'endHour:', endHour)
-      this.eventSet.add([startDate, endDate, startHour, endHour])
+      let startDate = moment.tz(event.start, event.startTimeZone).date()
+      let endDate = moment.tz(event.end, event.endTimeZone).date()
+
+      let startHour = moment.tz(event.start, event.startTimeZone).hours()
+      let endHour = moment.tz(event.end, event.endTimeZone).hours()
+
+      this.eventSet.add([summary, startDate, endDate, startHour, endHour])
     })
   }
 
+  // eslint-disable-next-line complexity
   sleepShift() {
     // to make matters simple, any occupied event won't be used for sleeping
     let eventSet = Array.from(this.eventSet)
-    console.log(eventSet)
     for (let i = eventSet.length - 1; i >= 0; i--) {
-      if (eventSet[i - 1] && eventSet[i][2] - eventSet[i - 1][3] >= 3) {
+      let summary = eventSet[i][0].toLowerCase()
+      // case 1 takes care of flights, both short and long distant flights
+      if (
+        summary.includes('flight') &&
+        eventSet[i][1] === eventSet[i][2] &&
+        eventSet[i][4] - eventSet[i][3] >= 3
+      ) {
+        this.unoccupied.set(eventSet[i][3], eventSet[i][4] - eventSet[i][3])
+      } else if (
+        summary.includes('flight') &&
+        eventSet[i][1] !== eventSet[i][2] &&
+        eventSet[i][4] + 24 - eventSet[i][3] >= 3
+      ) {
         this.unoccupied.set(
-          eventSet[i - 1][3],
-          eventSet[i][2] - eventSet[i - 1][3]
+          eventSet[i][3],
+          eventSet[i][4] + 24 - eventSet[i][3]
+        )
+      }
+      // case 2 takes care of unoccupied time between events
+      if (eventSet[i - 1] && eventSet[i][3] - eventSet[i - 1][4] >= 3) {
+        this.unoccupied.set(
+          eventSet[i - 1][4],
+          eventSet[i][3] - eventSet[i - 1][4]
         )
       }
     }
@@ -57,6 +73,6 @@ export default class SleepShiftSchedule {
       this.sleepOptions.push(z)
     }
 
-    return this.sleepOptions
+    return this.sleepOptions.slice(0, 3)
   }
 }
