@@ -809,7 +809,7 @@ var UserHome = /*#__PURE__*/function (_Component) {
           email = _this$props$user.email;
       var events = this.props.events;
       console.log('Events in React Component: ', events);
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Welcome, ", firstName, " ", lastName, "!"), events && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_big_calendar__WEBPACK_IMPORTED_MODULE_5__["Calendar"], {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Welcome, ", firstName, " ", lastName, "!"), events ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_big_calendar__WEBPACK_IMPORTED_MODULE_5__["Calendar"], {
         localizer: localizer,
         startAccessor: "start",
         endAccessor: "end",
@@ -819,7 +819,7 @@ var UserHome = /*#__PURE__*/function (_Component) {
         events: events,
         defaultView: "month",
         defaultDate: new Date(moment_timezone__WEBPACK_IMPORTED_MODULE_3___default()().startOf('day'))
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_calendar_add__WEBPACK_IMPORTED_MODULE_4__["default"], null));
+      }) : 'You current have no events.', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_calendar_add__WEBPACK_IMPORTED_MODULE_4__["default"], null));
     }
   }]);
 
@@ -1038,7 +1038,7 @@ var mapState = function mapState(state) {
 var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadInitialData: function loadInitialData() {
-      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["me"])());
+      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["me"])()); // dispatch(loadEvents())
     }
   };
 }; // The `withRouter` wrapper makes sure that updates are not blocked
@@ -1087,13 +1087,8 @@ socket.on('connect', function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadEvents", function() { return loadEvents; });
-/* harmony import */ var _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/calendar-add */ "./client/components/calendar-add.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -1126,67 +1121,41 @@ var getEvents = function getEvents(events) {
 
 
 var loadEvents = function loadEvents() {
-  return function (dispatch) {
-    _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].load('client:auth2', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-      var response, events;
+  return /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
+      var events;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].client.init({
-                apiKey: _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["API_KEY"],
-                clientId: _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["CLIENT_ID"],
-                discoveryDocs: _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["DISCOVERY_DOCS"],
-                scope: _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["SCOPES"]
-              });
-              _context.next = 4;
-              return _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].auth2.getAuthInstance().signIn();
+              _context.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/auth/google/calendar');
 
-            case 4:
-              _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].client.load('calendar', 'v3', function () {}); // get all events of the calendar in the developer console
-
-              _context.next = 7;
-              return _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].client.calendar.events.list({
-                calendarId: 'primary',
-                timeMin: new Date().toISOString(),
-                showDeleted: false,
-                singleEvents: true,
-                maxResults: 10,
-                orderBy: 'startTime'
-              });
-
-            case 7:
-              response = _context.sent;
-              events = response.result.items;
-              events = events.map(function (event) {
-                event = _objectSpread(_objectSpread({}, event), {}, {
-                  title: event.summary,
-                  start: new Date(event.start.dateTime.toString()),
-                  startTimeZone: event.start.timeZone,
-                  end: new Date(event.end.dateTime.toString()),
-                  endTimeZone: event.end.timeZone
-                });
-                return event;
-              });
-              console.log('EVENTS: ', events);
-              dispatch(getEvents(events || defaultEvents));
-              _context.next = 17;
+            case 3:
+              events = _context.sent;
+              console.log(events.data);
+              dispatch(getEvents(events.data || defaultEvents));
+              _context.next = 11;
               break;
 
-            case 14:
-              _context.prev = 14;
+            case 8:
+              _context.prev = 8;
               _context.t0 = _context["catch"](0);
               console.log(_context.t0);
 
-            case 17:
+            case 11:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 14]]);
-    })));
-  };
+      }, _callee, null, [[0, 8]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
 };
 /**
  * REDUCER
@@ -1204,6 +1173,48 @@ var loadEvents = function loadEvents() {
       return state;
   }
 });
+/*
+import {
+  gapi,
+  CLIENT_ID,
+  API_KEY,
+  DISCOVERY_DOCS,
+  SCOPES,
+} from '../components/calendar-add'
+
+  gapi.load('client:auth2', async () => {
+    try {
+      gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        discoveryDocs: DISCOVERY_DOCS,
+        scope: SCOPES,
+      })
+      //await gapi.auth2.getAuthInstance().signIn()
+      gapi.client.load('calendar', 'v3', () => { })
+
+      // get all events of the calendar in the developer console
+      const response = await gapi.client.calendar.events.list({
+        calendarId: 'primary',
+        timeMin: new Date().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: 'startTime',
+      })
+      let events = response.result.items
+      events = events.map((event) => {
+        event = {
+          ...event,
+          title: event.summary,
+          start: new Date(event.start.dateTime.toString()),
+          startTimeZone: event.start.timeZone,
+          end: new Date(event.end.dateTime.toString()),
+          endTimeZone: event.end.timeZone,
+        }
+        return event
+      })
+      console.log('EVENTS: ', events)*/
 
 /***/ }),
 

@@ -1,12 +1,5 @@
 /* eslint-disable complexity */
-import {
-  gapi,
-  CLIENT_ID,
-  API_KEY,
-  DISCOVERY_DOCS,
-  SCOPES,
-} from '../components/calendar-add'
-
+import axios from 'axios'
 /**
  * ACTION TYPES
  */
@@ -25,7 +18,36 @@ const getEvents = (events) => ({type: GET_EVENTS, events})
 /**
  * THUNK CREATORS
  */
-export const loadEvents = () => (dispatch) => {
+export const loadEvents = () => async (dispatch) => {
+  try {
+    const events = await axios.get('/auth/google/calendar')
+    console.log(events.data)
+    dispatch(getEvents(events.data || defaultEvents))
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+/**
+ * REDUCER
+ */
+export default function (state = defaultEvents, action) {
+  switch (action.type) {
+    case GET_EVENTS:
+      return action.events
+    default:
+      return state
+  }
+}
+/*
+import {
+  gapi,
+  CLIENT_ID,
+  API_KEY,
+  DISCOVERY_DOCS,
+  SCOPES,
+} from '../components/calendar-add'
+
   gapi.load('client:auth2', async () => {
     try {
       gapi.client.init({
@@ -34,8 +56,8 @@ export const loadEvents = () => (dispatch) => {
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES,
       })
-      await gapi.auth2.getAuthInstance().signIn()
-      gapi.client.load('calendar', 'v3', () => {})
+      //await gapi.auth2.getAuthInstance().signIn()
+      gapi.client.load('calendar', 'v3', () => { })
 
       // get all events of the calendar in the developer console
       const response = await gapi.client.calendar.events.list({
@@ -58,22 +80,4 @@ export const loadEvents = () => (dispatch) => {
         }
         return event
       })
-      console.log('EVENTS: ', events)
-      dispatch(getEvents(events || defaultEvents))
-    } catch (e) {
-      console.log(e)
-    }
-  })
-}
-
-/**
- * REDUCER
- */
-export default function (state = defaultEvents, action) {
-  switch (action.type) {
-    case GET_EVENTS:
-      return action.events
-    default:
-      return state
-  }
-}
+      console.log('EVENTS: ', events)*/

@@ -26,7 +26,7 @@ export class UserHome extends Component {
         <h3>
           Welcome, {firstName} {lastName}!
         </h3>
-        {events && (
+        {events ? (
           <Calendar
             localizer={localizer}
             startAccessor="start"
@@ -36,6 +36,8 @@ export class UserHome extends Component {
             defaultView="month"
             defaultDate={new Date(moment().startOf('day'))}
           />
+        ) : (
+          'You current have no events.'
         )}
         <AddToCalendar />
       </div>
