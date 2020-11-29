@@ -1,5 +1,5 @@
 //const passport = require('passport')
-// const router = require('express').Router()
+const router = require('express').Router()
 //const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const {User} = require('../db/models')
 const {google} = require('googleapis')
@@ -28,10 +28,7 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
 
   const scopes = [
     'https://www.googleapis.com/auth/calendar',
-    'https://www.googleapis.com/auth/calendar.settings.readonly',
-    'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
-    'https://www.googleapis.com/auth/calendar.events.public.readonly',
-    'https://www.googleapis.com/auth/calendar.freebusy',
+    'https://www.googleapis.com/auth/calendar.events',
     'profile',
     'email',
   ]
@@ -56,11 +53,12 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
         } else {
           const googleId = res.data.id
           const accessToken = tokens.access_token
-          const email = res.data.emails[0].value
-          const firstName = res.data.name.givenName
-          const lastName = res.data.name.familyName
+          const email = res.data.email
+          const firstName = res.data.given_name
+          const lastName = res.data.family_name
 
           const profile = {googleId, accessToken, email, firstName, lastName}
+          console.log(profile)
 
           await User.findOrCreate({
             where: {googleId},
@@ -77,7 +75,7 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
    * Lists the next 10 events on the user's primary calendar.
    * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
    */
-  const accessCalendar = async (auth, done) => {
+  module.exports.accessCalendar = async (auth, done) => {
     try {
       const calendar = google.calendar({version: 'v3', auth})
       let response = await calendar.events.list({
@@ -98,7 +96,29 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     }
   }
 
-  module.exports = {accessCalendar, url, authenticate}
+  // redirect to google sign in page
+  router.get('/', (req, res) => {
+    res.redirect(url)
+  })
+
+  router.get('/callback', async (req, res, next) => {
+    try {
+      const {code} = req.query
+      await authenticate(code, (err, res) => {
+        if (err) {
+          res.redirect('/login')
+        } else {
+          // this part is not loggin in
+          req.session.user = res
+        }
+      })
+      res.redirect('/home')
+    } catch (err) {
+      next(err)
+    }
+  })
+
+  module.exports = router
 }
 
 /*

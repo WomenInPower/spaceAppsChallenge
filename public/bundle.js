@@ -219,16 +219,11 @@ var Signup = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapSign
 /*!*******************************************!*\
   !*** ./client/components/calendar-add.js ***!
   \*******************************************/
-/*! exports provided: gapi, CLIENT_ID, API_KEY, DISCOVERY_DOCS, SCOPES, default */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gapi", function() { return gapi; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLIENT_ID", function() { return CLIENT_ID; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "API_KEY", function() { return API_KEY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DISCOVERY_DOCS", function() { return DISCOVERY_DOCS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SCOPES", function() { return SCOPES; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var styled_react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! styled-react-modal */ "./node_modules/styled-react-modal/build/index.js");
@@ -276,13 +271,16 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
-var gapi = window.gapi;
-var CLIENT_ID = "152078606463-jhs7f592smsapa4rcmkjhhit26d13guu.apps.googleusercontent.com";
-var API_KEY = "AIzaSyD5SLEedayUJilp43qwiZpyvc8RbBsqWak"; // Array of API discovery doc URLs for APIs used by the quickstart
+/*export const gapi = window.gapi
+export const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
+export const API_KEY = process.env.GOOGLE_CALENDAR_API_KEY
+// Array of API discovery doc URLs for APIs used by the quickstart
+export const DISCOVERY_DOCS = [
+  'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
+]
+// Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
+export const SCOPES = 'https://www.googleapis.com/auth/calendar.events'*/
 
-var DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']; // Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
-
-var SCOPES = 'https://www.googleapis.com/auth/calendar.events';
 var StyledModal = styled_react_modal__WEBPACK_IMPORTED_MODULE_1___default.a.styled(_templateObject());
 
 var AddToCalendar = /*#__PURE__*/function (_Component) {

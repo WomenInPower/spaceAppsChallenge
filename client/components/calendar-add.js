@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import SleepShiftSchedule from './sleepAlgorithm'
 import moment from 'moment'
 
-export const gapi = window.gapi
+/*export const gapi = window.gapi
 export const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
 export const API_KEY = process.env.GOOGLE_CALENDAR_API_KEY
 // Array of API discovery doc URLs for APIs used by the quickstart
@@ -12,7 +12,7 @@ export const DISCOVERY_DOCS = [
   'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
 ]
 // Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
-export const SCOPES = 'https://www.googleapis.com/auth/calendar.events'
+export const SCOPES = 'https://www.googleapis.com/auth/calendar.events'*/
 
 const StyledModal = Modal.styled`
   width: 400px;

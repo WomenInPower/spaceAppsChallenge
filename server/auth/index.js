@@ -1,12 +1,13 @@
 const router = require('express').Router()
 const User = require('../db/models/user')
 const {google} = require('googleapis')
-const {accessCalendar, url, authenticate} = require('./google')
+const accessCalendar = require('./google')
+
 module.exports = router
 
-/*router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   try {
-    const user = await User.findOne({ where: { email: req.body.email } })
+    const user = await User.findOne({where: {email: req.body.email}})
     if (!user) {
       console.log('No such user found:', req.body.email)
       res.status(401).send('Wrong username and/or password')
@@ -14,29 +15,9 @@ module.exports = router
       console.log('Incorrect password for user:', req.body.email)
       res.status(401).send('Wrong username and/or password')
     } else {
+      //req.login is only available if using Passportjs
       req.login(user, (err) => (err ? next(err) : res.json(user)))
     }
-  } catch (err) {
-    next(err)
-  }
-})*/
-
-// redirect to google sign in page
-router.get('/login', (req, res) => {
-  res.redirect(url)
-})
-
-router.get('/google/callback', async (req, res, next) => {
-  try {
-    const {code} = req.query
-    await authenticate(code, (err, res) => {
-      if (err) {
-        res.redirect('/login')
-      } else {
-        req.session.user = res
-      }
-    })
-    res.redirect('/home')
   } catch (err) {
     next(err)
   }
