@@ -1,11 +1,8 @@
-const passport = require('passport')
-const router = require('express').Router()
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+//const passport = require('passport')
+// const router = require('express').Router()
+//const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const {User} = require('../db/models')
 const {google} = require('googleapis')
-const credentials = require('./powersleep-1601738465065-4e4f4dc98a75.json')
-module.exports = router
-
 /**
  * For OAuth keys and other secrets, your Node process will search
  * process.env to find environment variables. On your production server,
@@ -20,6 +17,91 @@ module.exports = router
  * process.env.GOOGLE_CALLBACK = '/your/google/callback'
  */
 
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  console.log('Google client ID / secret not found. Skipping Google OAuth.')
+} else {
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_CALLBACK
+  )
+
+  const scopes = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.settings.readonly',
+    'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
+    'https://www.googleapis.com/auth/calendar.events.public.readonly',
+    'https://www.googleapis.com/auth/calendar.freebusy',
+    'profile',
+    'email',
+  ]
+
+  const url = oauth2Client.generateAuthUrl({
+    // 'online' (default) or 'offline'(gets refresh_token)
+    // eslint-disable-next-line camelcase
+    access_type: 'offline',
+    prompt: 'consent',
+    scope: scopes,
+  })
+
+  const authenticate = async function (code, done) {
+    try {
+      const user = await google.oauth2({version: 'v2', auth: oauth2Client})
+      const {tokens} = await oauth2Client.getToken(code)
+      oauth2Client.setCredentials(tokens)
+
+      user.userinfo.get(async (err, res) => {
+        if (err) {
+          console.log(err)
+        } else {
+          const googleId = res.data.id
+          const accessToken = tokens.access_token
+          const email = res.data.emails[0].value
+          const firstName = res.data.name.givenName
+          const lastName = res.data.name.familyName
+
+          const profile = {googleId, accessToken, email, firstName, lastName}
+
+          await User.findOrCreate({
+            where: {googleId},
+            defaults: {email, firstName, lastName},
+          })
+          done(null, profile)
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  /*
+   * Lists the next 10 events on the user's primary calendar.
+   * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+   */
+  const accessCalendar = async (auth, done) => {
+    try {
+      const calendar = google.calendar({version: 'v3', auth})
+      let response = await calendar.events.list({
+        calendarId: 'primary',
+        timeMin: new Date().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: 'startTime',
+      })
+      let events = response.data.items
+      console.log('EVENTS(backend): ', events)
+      if (events.length) {
+        done(events)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  module.exports = {accessCalendar, url, authenticate}
+}
+
+/*
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
   console.log('Google client ID / secret not found. Skipping Google OAuth.')
 } else {
@@ -62,53 +144,4 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
       failureRedirect: '/login',
     })
   )
-  const scopes = [
-    'https://www.googleapis.com/auth/calendar',
-    'https://www.googleapis.com/auth/calendar.settings.readonly',
-    'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
-    'https://www.googleapis.com/auth/calendar.events.public.readonly',
-    'https://www.googleapis.com/auth/calendar.freebusy',
-  ]
-  const auth = new google.auth.JWT(
-    credentials.client_email,
-    null,
-    credentials.private_key,
-    scopes
-  )
-
-  router.get('/calendar', async (req, res, next) => {
-    try {
-      /*
-       * Lists the next 10 events on the user's primary calendar.
-       * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
-       */
-      const calendar = google.calendar({version: 'v3', auth})
-      let response = await calendar.events.list({
-        calendarId: 'primary',
-        timeMin: new Date().toISOString(),
-        showDeleted: false,
-        singleEvents: true,
-        maxResults: 10,
-        orderBy: 'startTime',
-      })
-      let events = response.data.items
-      if (events.length) {
-        events = events.map((event) => {
-          event = {
-            ...event,
-            title: event.summary,
-            start: new Date(event.start.dateTime.toString()),
-            startTimeZone: event.start.timeZone,
-            end: new Date(event.end.dateTime.toString()),
-            endTimeZone: event.end.timeZone,
-          }
-          return event
-        })
-      }
-      console.log('EVENTS(backend): ', events)
-      res.json(events)
-    } catch (err) {
-      next(err)
-    }
-  })
-}
+} */
