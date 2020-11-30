@@ -155,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var AuthForm = function AuthForm(props) {
   var displayName = props.displayName;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Disclaimer: Due to the nature of this project being a Hackathon challenge for studying purpose, this app is NOT verified by Google. If you decide to proceed by granting our app the access to your data, please note that we only use the data to calculate the sleep shift schedule and will not share it with third parties."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "/auth/google"
   }, displayName, " with Google")));
 };
@@ -198,6 +198,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sleepAlgorithm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sleepAlgorithm */ "./client/components/sleepAlgorithm.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -237,6 +238,7 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
+
 var StyledModal = styled_react_modal__WEBPACK_IMPORTED_MODULE_1___default.a.styled(_templateObject());
 
 var AddToCalendar = /*#__PURE__*/function (_Component) {
@@ -266,7 +268,7 @@ var AddToCalendar = /*#__PURE__*/function (_Component) {
       this.setState({
         showModal: true
       });
-      var sleepShiftSchedule = new _sleepAlgorithm__WEBPACK_IMPORTED_MODULE_3__["default"](this.props.user.events);
+      var sleepShiftSchedule = new _sleepAlgorithm__WEBPACK_IMPORTED_MODULE_3__["default"](this.props.events);
       sleepShiftSchedule.utcToNumbers();
       sleepShiftSchedule.sleepShift();
       var sleepEvents = sleepShiftSchedule.numbersToEvents();
@@ -280,16 +282,11 @@ var AddToCalendar = /*#__PURE__*/function (_Component) {
       this.setState({
         showModal: false
       });
-    } // this needs to be done in the backend, insert
-
+    }
   }, {
     key: "handleClick",
     value: function handleClick(sleepEvent) {
-      var request = gapi.client.calendar.events.insert({
-        calendarId: 'primary',
-        resource: sleepEvent
-      });
-      request.execute();
+      this.props.addEvent(sleepEvent);
     }
   }, {
     key: "render",
@@ -307,12 +304,12 @@ var AddToCalendar = /*#__PURE__*/function (_Component) {
         isOpen: this.state.showModal,
         onBackgroundClick: this.closeModal,
         onEscapeKeydown: this.closeModal
-      }, sleepEvents && sleepEvents.map(function (sleepEvent, i) {
+      }, "Please select one of the following Zzzzz events to add to your calendar!", sleepEvents && sleepEvents.map(function (sleepEvent, i) {
         var zStart = moment__WEBPACK_IMPORTED_MODULE_4___default()(sleepEvent.start.dateTime).format('LLLL');
         var zEnd = moment__WEBPACK_IMPORTED_MODULE_4___default()(sleepEvent.end.dateTime).format('LLLL');
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: i
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Zzzzz:"), "From ", zStart, " to ", zEnd, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, "From ", zStart, " to ", zEnd, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           type: "button",
           onClick: function onClick() {
             return _this2.handleClick(sleepEvent);
@@ -329,13 +326,23 @@ var AddToCalendar = /*#__PURE__*/function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 var mapState = function mapState(_ref) {
-  var user = _ref.user;
+  var user = _ref.user,
+      events = _ref.events;
   return {
-    user: user
+    user: user,
+    events: events
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapState)(AddToCalendar));
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    addEvent: function addEvent(event) {
+      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["addEvent"])(event));
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapState, mapDispatch)(AddToCalendar));
 
 /***/ }),
 
@@ -674,6 +681,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _calendar_add__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./calendar-add */ "./client/components/calendar-add.js");
 /* harmony import */ var react_big_calendar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-big-calendar */ "./node_modules/react-big-calendar/dist/react-big-calendar.esm.js");
 /* harmony import */ var react_big_calendar_lib_css_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-big-calendar/lib/css/react-big-calendar.css */ "./node_modules/react-big-calendar/lib/css/react-big-calendar.css");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -681,6 +689,10 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -710,6 +722,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
  // a localizer for BigCalendar
 
 var localizer = Object(react_big_calendar__WEBPACK_IMPORTED_MODULE_4__["momentLocalizer"])(moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a);
+
 /**
  * COMPONENT
  */
@@ -726,11 +739,35 @@ var UserHome = /*#__PURE__*/function (_Component) {
   }
 
   _createClass(UserHome, [{
+    key: "componentDidMount",
+    value: function () {
+      var _componentDidMount = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return this.props.loadEvents();
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function componentDidMount() {
+        return _componentDidMount.apply(this, arguments);
+      }
+
+      return componentDidMount;
+    }()
+  }, {
     key: "render",
     value: function render() {
-      var _this$props$user = this.props.user,
-          firstName = _this$props$user.firstName,
-          events = _this$props$user.events;
+      var firstName = this.props.user.firstName;
+      var events = this.props.events; //convert data structure to map on React Calendar
 
       if (events.length) {
         events = events.map(function (event) {
@@ -743,9 +780,9 @@ var UserHome = /*#__PURE__*/function (_Component) {
           });
           return event;
         });
-      }
+      } //console.log('Events in React Component: ', events)
 
-      console.log('Events in React Component: ', events);
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Welcome, ", firstName, "!"), events && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_big_calendar__WEBPACK_IMPORTED_MODULE_4__["Calendar"], {
         localizer: localizer,
         startAccessor: "start",
@@ -767,13 +804,23 @@ var UserHome = /*#__PURE__*/function (_Component) {
  */
 
 var mapState = function mapState(_ref) {
-  var user = _ref.user;
+  var user = _ref.user,
+      events = _ref.events;
   return {
-    user: user
+    user: user,
+    events: events
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapState)(UserHome));
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    loadEvents: function loadEvents() {
+      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_6__["loadEvents"])());
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapState, mapDispatch)(UserHome));
 
 /***/ }),
 
@@ -959,6 +1006,7 @@ var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadInitialData: function loadInitialData() {
       dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["me"])());
+      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["loadEvents"])());
     }
   };
 }; // The `withRouter` wrapper makes sure that updates are not blocked
@@ -1001,14 +1049,27 @@ socket.on('connect', function () {
 /*!**********************************!*\
   !*** ./client/store/calendar.js ***!
   \**********************************/
-/*! exports provided: loadEvents, default */
+/*! exports provided: addEvent, loadEvents, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEvent", function() { return addEvent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadEvents", function() { return loadEvents; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -1019,6 +1080,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * ACTION TYPES
  */
 
+var INSERT_EVENT = 'INSERT_EVENT';
 var GET_EVENTS = 'GET_EVENTS';
 /**
  * INITIAL STATE
@@ -1028,6 +1090,13 @@ var defaultEvents = [];
 /**
  * ACTION CREATORS
  */
+
+var insertEvent = function insertEvent(event) {
+  return {
+    type: INSERT_EVENT,
+    event: event
+  };
+};
 
 var getEvents = function getEvents(events) {
   return {
@@ -1041,40 +1110,77 @@ var getEvents = function getEvents(events) {
 // need to create CRUD thunks, insert, delete, edit
 
 
-var loadEvents = function loadEvents() {
+var addEvent = function addEvent(event) {
   return /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
-      var events;
+      var res;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
               _context.next = 3;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/auth/google/calendar');
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/auth/event', event);
 
             case 3:
-              events = _context.sent;
-              console.log(events.data);
-              dispatch(getEvents(events.data || defaultEvents));
-              _context.next = 11;
+              res = _context.sent;
+              //console.log(res.data)
+              dispatch(insertEvent(res.data || defaultEvents));
+              _context.next = 10;
               break;
 
-            case 8:
-              _context.prev = 8;
+            case 7:
+              _context.prev = 7;
               _context.t0 = _context["catch"](0);
               console.log(_context.t0);
 
-            case 11:
+            case 10:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 8]]);
+      }, _callee, null, [[0, 7]]);
     }));
 
     return function (_x) {
       return _ref.apply(this, arguments);
+    };
+  }();
+};
+var loadEvents = function loadEvents() {
+  return /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
+      var res;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/auth/events');
+
+            case 3:
+              res = _context2.sent;
+              //console.log(res.data)
+              dispatch(getEvents(res.data || defaultEvents));
+              _context2.next = 10;
+              break;
+
+            case 7:
+              _context2.prev = 7;
+              _context2.t0 = _context2["catch"](0);
+              console.log(_context2.t0);
+
+            case 10:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 7]]);
+    }));
+
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
     };
   }();
 };
@@ -1090,6 +1196,9 @@ var loadEvents = function loadEvents() {
     case GET_EVENTS:
       return action.events;
 
+    case INSERT_EVENT:
+      return [].concat(_toConsumableArray(state), [action.event]);
+
     default:
       return state;
   }
@@ -1101,7 +1210,7 @@ var loadEvents = function loadEvents() {
 /*!*******************************!*\
   !*** ./client/store/index.js ***!
   \*******************************/
-/*! exports provided: default, me, logout, loadEvents */
+/*! exports provided: default, me, logout, addEvent, loadEvents */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1113,11 +1222,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux_devtools_extension__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! redux-devtools-extension */ "./node_modules/redux-devtools-extension/index.js");
 /* harmony import */ var redux_devtools_extension__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(redux_devtools_extension__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./user */ "./client/store/user.js");
+/* harmony import */ var _calendar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./calendar */ "./client/store/calendar.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "me", function() { return _user__WEBPACK_IMPORTED_MODULE_4__["me"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return _user__WEBPACK_IMPORTED_MODULE_4__["logout"]; });
 
-/* harmony import */ var _calendar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./calendar */ "./client/store/calendar.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addEvent", function() { return _calendar__WEBPACK_IMPORTED_MODULE_5__["addEvent"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "loadEvents", function() { return _calendar__WEBPACK_IMPORTED_MODULE_5__["loadEvents"]; });
 
 
@@ -1125,8 +1236,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var reducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
-  user: _user__WEBPACK_IMPORTED_MODULE_4__["default"]
+  user: _user__WEBPACK_IMPORTED_MODULE_4__["default"],
+  events: _calendar__WEBPACK_IMPORTED_MODULE_5__["default"]
 });
 var middleware = Object(redux_devtools_extension__WEBPACK_IMPORTED_MODULE_3__["composeWithDevTools"])(Object(redux__WEBPACK_IMPORTED_MODULE_0__["applyMiddleware"])(redux_thunk__WEBPACK_IMPORTED_MODULE_2__["default"], Object(redux_logger__WEBPACK_IMPORTED_MODULE_1__["createLogger"])({
   collapsed: true

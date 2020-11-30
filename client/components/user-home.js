@@ -6,13 +6,20 @@ import {Calendar, momentLocalizer} from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 // a localizer for BigCalendar
 const localizer = momentLocalizer(moment)
+import {loadEvents} from '../store'
 
 /**
  * COMPONENT
  */
 export class UserHome extends Component {
+  async componentDidMount() {
+    await this.props.loadEvents()
+  }
+
   render() {
-    let {firstName, events} = this.props.user
+    const {firstName} = this.props.user
+    let {events} = this.props
+    //convert data structure to map on React Calendar
     if (events.length) {
       events = events.map((event) => {
         event = {
@@ -26,7 +33,7 @@ export class UserHome extends Component {
         return event
       })
     }
-    console.log('Events in React Component: ', events)
+    //console.log('Events in React Component: ', events)
 
     return (
       <div>
@@ -51,5 +58,12 @@ export class UserHome extends Component {
 /**
  * CONTAINER
  */
-const mapState = ({user}) => ({user})
-export default connect(mapState)(UserHome)
+const mapState = ({user, events}) => ({user, events})
+const mapDispatch = (dispatch) => {
+  return {
+    loadEvents() {
+      dispatch(loadEvents())
+    },
+  }
+}
+export default connect(mapState, mapDispatch)(UserHome)

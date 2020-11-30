@@ -9,6 +9,13 @@ const AuthForm = (props) => {
 
   return (
     <div>
+      <p>
+        Disclaimer: Due to the nature of this project being a Hackathon
+        challenge for studying purpose, this app is NOT verified by Google. If
+        you decide to proceed by granting our app the access to your data,
+        please note that we only use the data to calculate the sleep shift
+        schedule and will not share it with third parties.
+      </p>
       <h1>
         <a href="/auth/google">{displayName} with Google</a>
       </h1>
