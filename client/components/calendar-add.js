@@ -4,16 +4,6 @@ import {connect} from 'react-redux'
 import SleepShiftSchedule from './sleepAlgorithm'
 import moment from 'moment'
 
-/*export const gapi = window.gapi
-export const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
-export const API_KEY = process.env.GOOGLE_CALENDAR_API_KEY
-// Array of API discovery doc URLs for APIs used by the quickstart
-export const DISCOVERY_DOCS = [
-  'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
-]
-// Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
-export const SCOPES = 'https://www.googleapis.com/auth/calendar.events'*/
-
 const StyledModal = Modal.styled`
   width: 400px;
   height: 500px;
@@ -42,7 +32,7 @@ class AddToCalendar extends Component {
 
   openModal() {
     this.setState({showModal: true})
-    let sleepShiftSchedule = new SleepShiftSchedule(this.props.events)
+    let sleepShiftSchedule = new SleepShiftSchedule(this.props.user.events)
     sleepShiftSchedule.utcToNumbers()
     sleepShiftSchedule.sleepShift()
     const sleepEvents = sleepShiftSchedule.numbersToEvents()
@@ -53,7 +43,7 @@ class AddToCalendar extends Component {
   closeModal() {
     this.setState({showModal: false})
   }
-
+  // this needs to be done in the backend, insert
   handleClick(sleepEvent) {
     const request = gapi.client.calendar.events.insert({
       calendarId: 'primary',
@@ -111,6 +101,5 @@ class AddToCalendar extends Component {
   }
 }
 
-const mapState = ({events}) => ({events})
-
+const mapState = ({user}) => ({user})
 export default connect(mapState)(AddToCalendar)

@@ -1,6 +1,4 @@
-//const passport = require('passport')
 const router = require('express').Router()
-//const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const {User} = require('../db/models')
 const {google} = require('googleapis')
 /**
@@ -41,61 +39,6 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     scope: scopes,
   })
 
-  const authenticate = async function (code, done) {
-    try {
-      const user = await google.oauth2({version: 'v2', auth: oauth2Client})
-      const {tokens} = await oauth2Client.getToken(code)
-      oauth2Client.setCredentials(tokens)
-
-      user.userinfo.get(async (err, res) => {
-        if (err) {
-          console.log(err)
-        } else {
-          const googleId = res.data.id
-          const accessToken = tokens.access_token
-          const email = res.data.email
-          const firstName = res.data.given_name
-          const lastName = res.data.family_name
-
-          const profile = {googleId, accessToken, email, firstName, lastName}
-          console.log(profile)
-
-          await User.findOrCreate({
-            where: {googleId},
-            defaults: {email, firstName, lastName},
-          })
-          done(null, profile)
-        }
-      })
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  /*
-   * Lists the next 10 events on the user's primary calendar.
-   * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
-   */
-  module.exports.accessCalendar = async (auth, done) => {
-    try {
-      const calendar = google.calendar({version: 'v3', auth})
-      let response = await calendar.events.list({
-        calendarId: 'primary',
-        timeMin: new Date().toISOString(),
-        showDeleted: false,
-        singleEvents: true,
-        maxResults: 10,
-        orderBy: 'startTime',
-      })
-      let events = response.data.items
-      console.log('EVENTS(backend): ', events)
-      if (events.length) {
-        done(events)
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   // redirect to google sign in page
   router.get('/', (req, res) => {
     res.redirect(url)
@@ -104,15 +47,30 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
   router.get('/callback', async (req, res, next) => {
     try {
       const {code} = req.query
-      await authenticate(code, (err, res) => {
-        if (err) {
-          res.redirect('/login')
-        } else {
-          // this part is not loggin in
-          req.session.user = res
-        }
+      const user = await google.oauth2({version: 'v2', auth: oauth2Client})
+      const {tokens} = await oauth2Client.getToken(code)
+      oauth2Client.setCredentials(tokens)
+
+      const response = await user.userinfo.get()
+      const googleId = response.data.id
+      const accessToken = tokens.access_token
+      const email = response.data.email
+      const firstName = response.data.given_name
+      const lastName = response.data.family_name
+
+      const profile = {googleId, accessToken, email, firstName, lastName}
+      req.session.user = profile
+
+      await User.findOrCreate({
+        where: {googleId},
+        defaults: {email, firstName, lastName},
       })
-      res.redirect('/home')
+
+      if (req.session.user) {
+        res.redirect('/home')
+      } else {
+        res.redirect('/login')
+      }
     } catch (err) {
       next(err)
     }
@@ -120,48 +78,3 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
 
   module.exports = router
 }
-
-/*
-if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-  console.log('Google client ID / secret not found. Skipping Google OAuth.')
-} else {
-  const googleConfig = {
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK,
-  }
-
-  const strategy = new GoogleStrategy(
-    googleConfig,
-    (token, refreshToken, profile, done) => {
-      const googleId = profile.id
-      const email = profile.emails[0].value
-      const firstName = profile.name.givenName
-      const lastName = profile.name.familyName
-
-      User.findOrCreate({
-        where: {googleId},
-        defaults: {email, firstName, lastName},
-      })
-        .then(([user]) => done(null, user))
-        .catch(done)
-    }
-  )
-
-  passport.use(strategy)
-
-  router.get(
-    '/',
-    passport.authenticate('google', {
-      scope: ['email', 'profile'],
-    })
-  )
-
-  router.get(
-    '/callback',
-    passport.authenticate('google', {
-      successRedirect: '/home',
-      failureRedirect: '/login',
-    })
-  )
-} */

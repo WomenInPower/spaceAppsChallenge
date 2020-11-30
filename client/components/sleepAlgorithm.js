@@ -19,11 +19,14 @@ export default class SleepShiftSchedule {
     this.events.forEach((event) => {
       let summary = event.summary
 
-      let startDate = moment.tz(event.start, event.startTimeZone).date()
-      let endDate = moment.tz(event.end, event.endTimeZone).date()
-
-      let startHour = moment.tz(event.start, event.startTimeZone).hours()
-      let endHour = moment.tz(event.end, event.endTimeZone).hours()
+      let startDate = moment
+        .tz(event.start.dateTime, event.startTimeZone)
+        .date()
+      let endDate = moment.tz(event.end.dateTime, event.endTimeZone).date()
+      let startHour = moment
+        .tz(event.start.dateTime, event.startTimeZone)
+        .hours()
+      let endHour = moment.tz(event.end.dateTime, event.endTimeZone).hours()
 
       this.eventSet.add([summary, startDate, endDate, startHour, endHour])
     })
