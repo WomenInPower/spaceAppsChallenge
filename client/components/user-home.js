@@ -40,6 +40,7 @@ export class UserHome extends Component {
         <h3>Welcome, {firstName}!</h3>
         {events && (
           <Calendar
+            showMultiDayTimes
             localizer={localizer}
             startAccessor="start"
             endAccessor="end"

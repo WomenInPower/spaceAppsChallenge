@@ -16,8 +16,13 @@ router.get('/me', (req, res, next) => {
     const {user} = req.session
     //take out accessTaken before sending back
     if (user) {
-      //console.log(user)
-      res.json(user)
+      const filtered = Object.keys(user).filter((key) => key !== 'accessToken')
+      const filteredUser = filtered.reduce((obj, key) => {
+        obj[key] = user[key]
+        return obj
+      }, {})
+      console.log(filteredUser)
+      res.json(filteredUser)
     }
   } catch (err) {
     next(err)

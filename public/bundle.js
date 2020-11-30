@@ -784,6 +784,7 @@ var UserHome = /*#__PURE__*/function (_Component) {
 
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Welcome, ", firstName, "!"), events && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_big_calendar__WEBPACK_IMPORTED_MODULE_4__["Calendar"], {
+        showMultiDayTimes: true,
         localizer: localizer,
         startAccessor: "start",
         endAccessor: "end",
@@ -1006,7 +1007,6 @@ var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadInitialData: function loadInitialData() {
       dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["me"])());
-      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["loadEvents"])());
     }
   };
 }; // The `withRouter` wrapper makes sure that updates are not blocked
