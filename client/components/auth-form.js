@@ -1,7 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-// import PropTypes from 'prop-types'
-import {auth} from '../store'
 
 /**
  * COMPONENT
@@ -11,6 +9,13 @@ const AuthForm = (props) => {
 
   return (
     <div>
+      <p>
+        Disclaimer: Due to the nature of this project being a Hackathon
+        challenge for studying purpose, this app is NOT verified by Google. If
+        you decide to proceed by granting our app the access to your data,
+        please note that we only use the data to calculate the sleep shift
+        schedule and will not share it with third parties.
+      </p>
       <h1>
         <a href="/auth/google">{displayName} with Google</a>
       </h1>
@@ -33,35 +38,5 @@ const mapLogin = (state) => {
   }
 }
 
-const mapSignup = (state) => {
-  return {
-    name: 'signup',
-    displayName: 'Sign Up',
-    error: state.user.error,
-  }
-}
-
-const mapDispatch = (dispatch) => {
-  return {
-    handleSubmit(evt) {
-      evt.preventDefault()
-      const formName = evt.target.name
-      const email = evt.target.email.value
-      const password = evt.target.password.value
-      dispatch(auth(email, password, formName))
-    },
-  }
-}
-
-export const Login = connect(mapLogin, mapDispatch)(AuthForm)
-export const Signup = connect(mapSignup, mapDispatch)(AuthForm)
-
-/**
- * PROP TYPES
- */
-// AuthForm.propTypes = {
-//   name: PropTypes.string.isRequired,
-//   displayName: PropTypes.string.isRequired,
-//   handleSubmit: PropTypes.func.isRequired,
-//   error: PropTypes.object
-// }
+const Login = connect(mapLogin)(AuthForm)
+export default Login

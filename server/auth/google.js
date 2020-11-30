@@ -1,9 +1,6 @@
-const passport = require('passport')
 const router = require('express').Router()
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const {User} = require('../db/models')
-module.exports = router
-
+const {google} = require('googleapis')
 /**
  * For OAuth keys and other secrets, your Node process will search
  * process.env to find environment variables. On your production server,
@@ -21,43 +18,63 @@ module.exports = router
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
   console.log('Google client ID / secret not found. Skipping Google OAuth.')
 } else {
-  const googleConfig = {
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK,
-  }
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_CALLBACK
+  )
 
-  const strategy = new GoogleStrategy(
-    googleConfig,
-    (token, refreshToken, profile, done) => {
-      const googleId = profile.id
-      const email = profile.emails[0].value
-      const firstName = profile.name.givenName
-      const lastName = profile.name.familyName
+  const scopes = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
+    'profile',
+    'email',
+  ]
 
-      User.findOrCreate({
+  const url = oauth2Client.generateAuthUrl({
+    // 'online' (default) or 'offline'(gets refresh_token)
+    // eslint-disable-next-line camelcase
+    access_type: 'offline',
+    prompt: 'consent',
+    scope: scopes,
+  })
+
+  // redirect to google sign in page
+  router.get('/', (req, res) => {
+    res.redirect(url)
+  })
+
+  router.get('/callback', async (req, res, next) => {
+    try {
+      const {code} = req.query
+      const user = await google.oauth2({version: 'v2', auth: oauth2Client})
+      const {tokens} = await oauth2Client.getToken(code)
+      oauth2Client.setCredentials(tokens)
+
+      const response = await user.userinfo.get()
+      const googleId = response.data.id
+      const accessToken = tokens.access_token
+      const email = response.data.email
+      const firstName = response.data.given_name
+      const lastName = response.data.family_name
+
+      const profile = {googleId, accessToken, email, firstName, lastName}
+      req.session.user = profile
+
+      await User.findOrCreate({
         where: {googleId},
         defaults: {email, firstName, lastName},
       })
-        .then(([user]) => done(null, user))
-        .catch(done)
+
+      if (req.session.user) {
+        res.redirect('/home')
+      } else {
+        res.redirect('/login')
+      }
+    } catch (err) {
+      next(err)
     }
-  )
+  })
 
-  passport.use(strategy)
-
-  router.get(
-    '/',
-    passport.authenticate('google', {
-      scope: ['email', 'profile', 'https://www.googleapis.com/auth/calendar'],
-    })
-  )
-
-  router.get(
-    '/callback',
-    passport.authenticate('google', {
-      successRedirect: '/home',
-      failureRedirect: '/login',
-    })
-  )
+  module.exports = router
 }

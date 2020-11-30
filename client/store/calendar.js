@@ -1,17 +1,10 @@
 /* eslint-disable complexity */
-import {
-  gapi,
-  CLIENT_ID,
-  API_KEY,
-  DISCOVERY_DOCS,
-  SCOPES,
-} from '../components/calendar-add'
-
+import axios from 'axios'
 /**
  * ACTION TYPES
  */
+const INSERT_EVENT = 'INSERT_EVENT'
 const GET_EVENTS = 'GET_EVENTS'
-
 /**
  * INITIAL STATE
  */
@@ -20,50 +13,31 @@ const defaultEvents = []
 /**
  * ACTION CREATORS
  */
+const insertEvent = (event) => ({type: INSERT_EVENT, event})
 const getEvents = (events) => ({type: GET_EVENTS, events})
-
 /**
  * THUNK CREATORS
  */
-export const loadEvents = () => (dispatch) => {
-  gapi.load('client:auth2', async () => {
-    try {
-      gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES,
-      })
-      await gapi.auth2.getAuthInstance().signIn()
-      gapi.client.load('calendar', 'v3', () => {})
 
-      // get all events of the calendar in the developer console
-      const response = await gapi.client.calendar.events.list({
-        calendarId: 'primary',
-        timeMin: new Date().toISOString(),
-        showDeleted: false,
-        singleEvents: true,
-        maxResults: 10,
-        orderBy: 'startTime',
-      })
-      let events = response.result.items
-      events = events.map((event) => {
-        event = {
-          ...event,
-          title: event.summary,
-          start: new Date(event.start.dateTime.toString()),
-          startTimeZone: event.start.timeZone,
-          end: new Date(event.end.dateTime.toString()),
-          endTimeZone: event.end.timeZone,
-        }
-        return event
-      })
-      console.log('EVENTS: ', events)
-      dispatch(getEvents(events || defaultEvents))
-    } catch (e) {
-      console.log(e)
-    }
-  })
+// need to create CRUD thunks, insert, delete, edit
+export const addEvent = (event) => async (dispatch) => {
+  try {
+    const res = await axios.post('/auth/event', event)
+    //console.log(res.data)
+    dispatch(insertEvent(res.data || defaultEvents))
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export const loadEvents = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/auth/events')
+    //console.log(res.data)
+    dispatch(getEvents(res.data || defaultEvents))
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 /**
@@ -73,6 +47,8 @@ export default function (state = defaultEvents, action) {
   switch (action.type) {
     case GET_EVENTS:
       return action.events
+    case INSERT_EVENT:
+      return [...state, action.event]
     default:
       return state
   }

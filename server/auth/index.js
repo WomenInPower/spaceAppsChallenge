@@ -1,45 +1,77 @@
 const router = require('express').Router()
-const User = require('../db/models/user')
+const {google} = require('googleapis')
 module.exports = router
 
-router.post('/login', async (req, res, next) => {
+router.post('/logout', (req, res) => {
+  req.session.destroy()
+  res.redirect('/')
+})
+
+/*
+ * Lists the next 10 events on the user's primary calendar.
+ * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ */
+router.get('/me', (req, res, next) => {
   try {
-    const user = await User.findOne({where: {email: req.body.email}})
-    if (!user) {
-      console.log('No such user found:', req.body.email)
-      res.status(401).send('Wrong username and/or password')
-    } else if (!user.correctPassword(req.body.password)) {
-      console.log('Incorrect password for user:', req.body.email)
-      res.status(401).send('Wrong username and/or password')
-    } else {
-      req.login(user, err => (err ? next(err) : res.json(user)))
+    const {user} = req.session
+    //take out accessTaken before sending back
+    if (user) {
+      //console.log(user)
+      res.json(user)
     }
   } catch (err) {
     next(err)
   }
 })
 
-router.post('/signup', async (req, res, next) => {
+router.get('/events', async (req, res, next) => {
   try {
-    const user = await User.create(req.body)
-    req.login(user, err => (err ? next(err) : res.json(user)))
-  } catch (err) {
-    if (err.name === 'SequelizeUniqueConstraintError') {
-      res.status(401).send('User already exists')
-    } else {
-      next(err)
+    const {user} = req.session
+    if (user) {
+      const oauth2Client = new google.auth.OAuth2()
+      oauth2Client.setCredentials({
+        // eslint-disable-next-line camelcase
+        access_token: user.accessToken,
+      })
+      const calendar = google.calendar({version: 'v3', auth: oauth2Client})
+      let response = await calendar.events.list({
+        calendarId: 'primary',
+        timeMin: new Date().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: 'startTime',
+      })
+      const events = response.data.items
+      console.log('EVENTS: ', events)
+      res.json(events)
     }
+  } catch (e) {
+    next(e)
   }
 })
 
-router.post('/logout', (req, res) => {
-  req.logout()
-  req.session.destroy()
-  res.redirect('/')
-})
-
-router.get('/me', (req, res) => {
-  res.json(req.user)
+router.post('/event', async (req, res, next) => {
+  try {
+    const {user} = req.session
+    if (user) {
+      const oauth2Client = new google.auth.OAuth2()
+      oauth2Client.setCredentials({
+        // eslint-disable-next-line camelcase
+        access_token: user.accessToken,
+      })
+      const calendar = google.calendar({version: 'v3', auth: oauth2Client})
+      const response = await calendar.events.insert({
+        calendarId: 'primary',
+        resource: req.body,
+      })
+      //console.log(response.data)
+      const event = response.data
+      res.json(event)
+    }
+  } catch (e) {
+    next(e)
+  }
 })
 
 router.use('/google', require('./google'))

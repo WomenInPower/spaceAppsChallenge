@@ -139,19 +139,14 @@ var About = function About() {
 /*!****************************************!*\
   !*** ./client/components/auth-form.js ***!
   \****************************************/
-/*! exports provided: Login, Signup */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Login", function() { return Login; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Signup", function() { return Signup; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
-
- // import PropTypes from 'prop-types'
 
 
 /**
@@ -160,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var AuthForm = function AuthForm(props) {
   var displayName = props.displayName;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Disclaimer: Due to the nature of this project being a Hackathon challenge for studying purpose, this app is NOT verified by Google. If you decide to proceed by granting our app the access to your data, please note that we only use the data to calculate the sleep shift schedule and will not share it with third parties."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "/auth/google"
   }, displayName, " with Google")));
 };
@@ -181,37 +176,8 @@ var mapLogin = function mapLogin(state) {
   };
 };
 
-var mapSignup = function mapSignup(state) {
-  return {
-    name: 'signup',
-    displayName: 'Sign Up',
-    error: state.user.error
-  };
-};
-
-var mapDispatch = function mapDispatch(dispatch) {
-  return {
-    handleSubmit: function handleSubmit(evt) {
-      evt.preventDefault();
-      var formName = evt.target.name;
-      var email = evt.target.email.value;
-      var password = evt.target.password.value;
-      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_2__["auth"])(email, password, formName));
-    }
-  };
-};
-
-var Login = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapLogin, mapDispatch)(AuthForm);
-var Signup = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapSignup, mapDispatch)(AuthForm);
-/**
- * PROP TYPES
- */
-// AuthForm.propTypes = {
-//   name: PropTypes.string.isRequired,
-//   displayName: PropTypes.string.isRequired,
-//   handleSubmit: PropTypes.func.isRequired,
-//   error: PropTypes.object
-// }
+var Login = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapLogin)(AuthForm);
+/* harmony default export */ __webpack_exports__["default"] = (Login);
 
 /***/ }),
 
@@ -219,16 +185,11 @@ var Signup = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapSign
 /*!*******************************************!*\
   !*** ./client/components/calendar-add.js ***!
   \*******************************************/
-/*! exports provided: gapi, CLIENT_ID, API_KEY, DISCOVERY_DOCS, SCOPES, default */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gapi", function() { return gapi; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLIENT_ID", function() { return CLIENT_ID; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "API_KEY", function() { return API_KEY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DISCOVERY_DOCS", function() { return DISCOVERY_DOCS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SCOPES", function() { return SCOPES; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var styled_react_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! styled-react-modal */ "./node_modules/styled-react-modal/build/index.js");
@@ -237,6 +198,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sleepAlgorithm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sleepAlgorithm */ "./client/components/sleepAlgorithm.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -276,13 +238,7 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
-var gapi = window.gapi;
-var CLIENT_ID = "152078606463-jhs7f592smsapa4rcmkjhhit26d13guu.apps.googleusercontent.com";
-var API_KEY = "AIzaSyD5SLEedayUJilp43qwiZpyvc8RbBsqWak"; // Array of API discovery doc URLs for APIs used by the quickstart
 
-var DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']; // Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
-
-var SCOPES = 'https://www.googleapis.com/auth/calendar.events';
 var StyledModal = styled_react_modal__WEBPACK_IMPORTED_MODULE_1___default.a.styled(_templateObject());
 
 var AddToCalendar = /*#__PURE__*/function (_Component) {
@@ -330,11 +286,7 @@ var AddToCalendar = /*#__PURE__*/function (_Component) {
   }, {
     key: "handleClick",
     value: function handleClick(sleepEvent) {
-      var request = gapi.client.calendar.events.insert({
-        calendarId: 'primary',
-        resource: sleepEvent
-      });
-      request.execute();
+      this.props.addEvent(sleepEvent);
     }
   }, {
     key: "render",
@@ -352,12 +304,12 @@ var AddToCalendar = /*#__PURE__*/function (_Component) {
         isOpen: this.state.showModal,
         onBackgroundClick: this.closeModal,
         onEscapeKeydown: this.closeModal
-      }, sleepEvents && sleepEvents.map(function (sleepEvent, i) {
+      }, "Please select one of the following Zzzzz events to add to your calendar!", sleepEvents && sleepEvents.map(function (sleepEvent, i) {
         var zStart = moment__WEBPACK_IMPORTED_MODULE_4___default()(sleepEvent.start.dateTime).format('LLLL');
         var zEnd = moment__WEBPACK_IMPORTED_MODULE_4___default()(sleepEvent.end.dateTime).format('LLLL');
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: i
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Zzzzz:"), "From ", zStart, " to ", zEnd, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, "From ", zStart, " to ", zEnd, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           type: "button",
           onClick: function onClick() {
             return _this2.handleClick(sleepEvent);
@@ -374,13 +326,23 @@ var AddToCalendar = /*#__PURE__*/function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 var mapState = function mapState(_ref) {
-  var events = _ref.events;
+  var user = _ref.user,
+      events = _ref.events;
   return {
+    user: user,
     events: events
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapState)(AddToCalendar));
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    addEvent: function addEvent(event) {
+      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["addEvent"])(event));
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapState, mapDispatch)(AddToCalendar));
 
 /***/ }),
 
@@ -433,7 +395,7 @@ var Footer = function Footer() {
 /*!************************************!*\
   !*** ./client/components/index.js ***!
   \************************************/
-/*! exports provided: Navbar, Splash, UserHome, About, Login, Signup, Footer */
+/*! exports provided: Navbar, Splash, UserHome, About, Login, Footer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -451,9 +413,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "About", function() { return _about__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
 /* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Login", function() { return _auth_form__WEBPACK_IMPORTED_MODULE_4__["Login"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Signup", function() { return _auth_form__WEBPACK_IMPORTED_MODULE_4__["Signup"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Login", function() { return _auth_form__WEBPACK_IMPORTED_MODULE_4__["default"]; });
 
 /* harmony import */ var _footer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./footer */ "./client/components/footer.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Footer", function() { return _footer__WEBPACK_IMPORTED_MODULE_5__["default"]; });
@@ -532,7 +492,7 @@ var Navbar = function Navbar(_ref) {
 
 var mapState = function mapState(state) {
   return {
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.googleId
   };
 };
 
@@ -611,10 +571,10 @@ var SleepShiftSchedule = /*#__PURE__*/function () {
 
       this.events.forEach(function (event) {
         var summary = event.summary;
-        var startDate = moment.tz(event.start, event.startTimeZone).date();
-        var endDate = moment.tz(event.end, event.endTimeZone).date();
-        var startHour = moment.tz(event.start, event.startTimeZone).hours();
-        var endHour = moment.tz(event.end, event.endTimeZone).hours();
+        var startDate = moment.tz(event.start.dateTime, event.startTimeZone).date();
+        var endDate = moment.tz(event.end.dateTime, event.endTimeZone).date();
+        var startHour = moment.tz(event.start.dateTime, event.startTimeZone).hours();
+        var endHour = moment.tz(event.end.dateTime, event.endTimeZone).hours();
 
         _this.eventSet.add([summary, startDate, endDate, startHour, endHour]);
       });
@@ -715,16 +675,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserHome", function() { return UserHome; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment-timezone */ "./node_modules/moment-timezone/index.js");
-/* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment_timezone__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _calendar_add__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./calendar-add */ "./client/components/calendar-add.js");
-/* harmony import */ var react_big_calendar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-big-calendar */ "./node_modules/react-big-calendar/dist/react-big-calendar.esm.js");
-/* harmony import */ var react_big_calendar_lib_css_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-big-calendar/lib/css/react-big-calendar.css */ "./node_modules/react-big-calendar/lib/css/react-big-calendar.css");
-/* harmony import */ var _store_calendar__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../store/calendar */ "./client/store/calendar.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment-timezone */ "./node_modules/moment-timezone/index.js");
+/* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment_timezone__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _calendar_add__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./calendar-add */ "./client/components/calendar-add.js");
+/* harmony import */ var react_big_calendar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-big-calendar */ "./node_modules/react-big-calendar/dist/react-big-calendar.esm.js");
+/* harmony import */ var react_big_calendar_lib_css_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-big-calendar/lib/css/react-big-calendar.css */ "./node_modules/react-big-calendar/lib/css/react-big-calendar.css");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -755,11 +719,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-
-
  // a localizer for BigCalendar
 
-var localizer = Object(react_big_calendar__WEBPACK_IMPORTED_MODULE_5__["momentLocalizer"])(moment_timezone__WEBPACK_IMPORTED_MODULE_3___default.a);
+var localizer = Object(react_big_calendar__WEBPACK_IMPORTED_MODULE_4__["momentLocalizer"])(moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a);
+
 /**
  * COMPONENT
  */
@@ -803,13 +766,24 @@ var UserHome = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props$user = this.props.user,
-          firstName = _this$props$user.firstName,
-          lastName = _this$props$user.lastName,
-          email = _this$props$user.email;
-      var events = this.props.events;
-      console.log('Events in React Component: ', events);
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Welcome, ", firstName, " ", lastName, "!"), events && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_big_calendar__WEBPACK_IMPORTED_MODULE_5__["Calendar"], {
+      var firstName = this.props.user.firstName;
+      var events = this.props.events; //convert data structure to map on React Calendar
+
+      if (events.length) {
+        events = events.map(function (event) {
+          event = _objectSpread(_objectSpread({}, event), {}, {
+            title: event.summary,
+            start: new Date(event.start.dateTime.toString()),
+            startTimeZone: event.start.timeZone,
+            end: new Date(event.end.dateTime.toString()),
+            endTimeZone: event.end.timeZone
+          });
+          return event;
+        });
+      } //console.log('Events in React Component: ', events)
+
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Welcome, ", firstName, "!"), events && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_big_calendar__WEBPACK_IMPORTED_MODULE_4__["Calendar"], {
         localizer: localizer,
         startAccessor: "start",
         endAccessor: "end",
@@ -818,8 +792,8 @@ var UserHome = /*#__PURE__*/function (_Component) {
         },
         events: events,
         defaultView: "month",
-        defaultDate: new Date(moment_timezone__WEBPACK_IMPORTED_MODULE_3___default()().startOf('day'))
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_calendar_add__WEBPACK_IMPORTED_MODULE_4__["default"], null));
+        defaultDate: new Date(moment_timezone__WEBPACK_IMPORTED_MODULE_2___default()().startOf('day'))
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_calendar_add__WEBPACK_IMPORTED_MODULE_3__["default"], null));
     }
   }]);
 
@@ -841,19 +815,12 @@ var mapState = function mapState(_ref) {
 var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadEvents: function loadEvents() {
-      return dispatch(Object(_store_calendar__WEBPACK_IMPORTED_MODULE_7__["loadEvents"])());
+      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_6__["loadEvents"])());
     }
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapState, mapDispatch)(UserHome));
-/**
- * PROP TYPES
- */
-
-UserHome.propTypes = {
-  email: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
-};
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapState, mapDispatch)(UserHome));
 
 /***/ }),
 
@@ -1031,7 +998,7 @@ var mapState = function mapState(state) {
   return {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
     // Otherwise, state.user will be an empty object, and state.user.id will be falsey
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.googleId
   };
 };
 
@@ -1039,6 +1006,7 @@ var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadInitialData: function loadInitialData() {
       dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["me"])());
+      dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_5__["loadEvents"])());
     }
   };
 }; // The `withRouter` wrapper makes sure that updates are not blocked
@@ -1081,18 +1049,26 @@ socket.on('connect', function () {
 /*!**********************************!*\
   !*** ./client/store/calendar.js ***!
   \**********************************/
-/*! exports provided: loadEvents, default */
+/*! exports provided: addEvent, loadEvents, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEvent", function() { return addEvent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadEvents", function() { return loadEvents; });
-/* harmony import */ var _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/calendar-add */ "./client/components/calendar-add.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -1104,6 +1080,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * ACTION TYPES
  */
 
+var INSERT_EVENT = 'INSERT_EVENT';
 var GET_EVENTS = 'GET_EVENTS';
 /**
  * INITIAL STATE
@@ -1114,6 +1091,13 @@ var defaultEvents = [];
  * ACTION CREATORS
  */
 
+var insertEvent = function insertEvent(event) {
+  return {
+    type: INSERT_EVENT,
+    event: event
+  };
+};
+
 var getEvents = function getEvents(events) {
   return {
     type: GET_EVENTS,
@@ -1123,70 +1107,82 @@ var getEvents = function getEvents(events) {
 /**
  * THUNK CREATORS
  */
+// need to create CRUD thunks, insert, delete, edit
 
 
-var loadEvents = function loadEvents() {
-  return function (dispatch) {
-    _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].load('client:auth2', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-      var response, events;
+var addEvent = function addEvent(event) {
+  return /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
+      var res;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].client.init({
-                apiKey: _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["API_KEY"],
-                clientId: _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["CLIENT_ID"],
-                discoveryDocs: _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["DISCOVERY_DOCS"],
-                scope: _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["SCOPES"]
-              });
-              _context.next = 4;
-              return _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].auth2.getAuthInstance().signIn();
+              _context.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/auth/event', event);
 
-            case 4:
-              _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].client.load('calendar', 'v3', function () {}); // get all events of the calendar in the developer console
-
-              _context.next = 7;
-              return _components_calendar_add__WEBPACK_IMPORTED_MODULE_0__["gapi"].client.calendar.events.list({
-                calendarId: 'primary',
-                timeMin: new Date().toISOString(),
-                showDeleted: false,
-                singleEvents: true,
-                maxResults: 10,
-                orderBy: 'startTime'
-              });
-
-            case 7:
-              response = _context.sent;
-              events = response.result.items;
-              events = events.map(function (event) {
-                event = _objectSpread(_objectSpread({}, event), {}, {
-                  title: event.summary,
-                  start: new Date(event.start.dateTime.toString()),
-                  startTimeZone: event.start.timeZone,
-                  end: new Date(event.end.dateTime.toString()),
-                  endTimeZone: event.end.timeZone
-                });
-                return event;
-              });
-              console.log('EVENTS: ', events);
-              dispatch(getEvents(events || defaultEvents));
-              _context.next = 17;
+            case 3:
+              res = _context.sent;
+              //console.log(res.data)
+              dispatch(insertEvent(res.data || defaultEvents));
+              _context.next = 10;
               break;
 
-            case 14:
-              _context.prev = 14;
+            case 7:
+              _context.prev = 7;
               _context.t0 = _context["catch"](0);
               console.log(_context.t0);
 
-            case 17:
+            case 10:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 14]]);
-    })));
-  };
+      }, _callee, null, [[0, 7]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+};
+var loadEvents = function loadEvents() {
+  return /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
+      var res;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/auth/events');
+
+            case 3:
+              res = _context2.sent;
+              //console.log(res.data)
+              dispatch(getEvents(res.data || defaultEvents));
+              _context2.next = 10;
+              break;
+
+            case 7:
+              _context2.prev = 7;
+              _context2.t0 = _context2["catch"](0);
+              console.log(_context2.t0);
+
+            case 10:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 7]]);
+    }));
+
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
 };
 /**
  * REDUCER
@@ -1200,6 +1196,9 @@ var loadEvents = function loadEvents() {
     case GET_EVENTS:
       return action.events;
 
+    case INSERT_EVENT:
+      return [].concat(_toConsumableArray(state), [action.event]);
+
     default:
       return state;
   }
@@ -1211,7 +1210,7 @@ var loadEvents = function loadEvents() {
 /*!*******************************!*\
   !*** ./client/store/index.js ***!
   \*******************************/
-/*! exports provided: default, me, auth, logout, loadEvents */
+/*! exports provided: default, me, logout, addEvent, loadEvents */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1226,9 +1225,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _calendar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./calendar */ "./client/store/calendar.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "me", function() { return _user__WEBPACK_IMPORTED_MODULE_4__["me"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "auth", function() { return _user__WEBPACK_IMPORTED_MODULE_4__["auth"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return _user__WEBPACK_IMPORTED_MODULE_4__["logout"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addEvent", function() { return _calendar__WEBPACK_IMPORTED_MODULE_5__["addEvent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "loadEvents", function() { return _calendar__WEBPACK_IMPORTED_MODULE_5__["loadEvents"]; });
 
@@ -1256,13 +1255,12 @@ var store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(reducer, m
 /*!******************************!*\
   !*** ./client/store/user.js ***!
   \******************************/
-/*! exports provided: me, auth, logout, default */
+/*! exports provided: me, logout, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "me", function() { return me; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "auth", function() { return auth; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return logout; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
@@ -1341,86 +1339,38 @@ var me = function me() {
     };
   }();
 };
-var auth = function auth(email, password, method) {
+var logout = function logout() {
   return /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
-      var res;
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
               _context2.next = 3;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/auth/".concat(method), {
-                email: email,
-                password: password
-              });
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/auth/logout');
 
             case 3:
-              res = _context2.sent;
-              _context2.next = 9;
+              dispatch(removeUser());
+              _history__WEBPACK_IMPORTED_MODULE_1__["default"].push('/login');
+              _context2.next = 10;
               break;
 
-            case 6:
-              _context2.prev = 6;
+            case 7:
+              _context2.prev = 7;
               _context2.t0 = _context2["catch"](0);
-              return _context2.abrupt("return", dispatch(getUser({
-                error: _context2.t0
-              })));
-
-            case 9:
-              try {
-                dispatch(getUser(res.data));
-                _history__WEBPACK_IMPORTED_MODULE_1__["default"].push('/home');
-              } catch (dispatchOrHistoryErr) {
-                console.error(dispatchOrHistoryErr);
-              }
+              console.error(_context2.t0);
 
             case 10:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 6]]);
+      }, _callee2, null, [[0, 7]]);
     }));
 
     return function (_x2) {
       return _ref2.apply(this, arguments);
-    };
-  }();
-};
-var logout = function logout() {
-  return /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(dispatch) {
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              _context3.next = 3;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/auth/logout');
-
-            case 3:
-              dispatch(removeUser());
-              _history__WEBPACK_IMPORTED_MODULE_1__["default"].push('/login');
-              _context3.next = 10;
-              break;
-
-            case 7:
-              _context3.prev = 7;
-              _context3.t0 = _context3["catch"](0);
-              console.error(_context3.t0);
-
-            case 10:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 7]]);
-    }));
-
-    return function (_x3) {
-      return _ref3.apply(this, arguments);
     };
   }();
 };

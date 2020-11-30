@@ -3,16 +3,7 @@ import Modal from 'styled-react-modal'
 import {connect} from 'react-redux'
 import SleepShiftSchedule from './sleepAlgorithm'
 import moment from 'moment'
-
-export const gapi = window.gapi
-export const CLIENT_ID = process.env.GOOGLE_CALENDAR_CLIENT_ID
-export const API_KEY = process.env.GOOGLE_CALENDAR_API_KEY
-// Array of API discovery doc URLs for APIs used by the quickstart
-export const DISCOVERY_DOCS = [
-  'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
-]
-// Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
-export const SCOPES = 'https://www.googleapis.com/auth/calendar.events'
+import {addEvent} from '../store'
 
 const StyledModal = Modal.styled`
   width: 400px;
@@ -55,11 +46,7 @@ class AddToCalendar extends Component {
   }
 
   handleClick(sleepEvent) {
-    const request = gapi.client.calendar.events.insert({
-      calendarId: 'primary',
-      resource: sleepEvent,
-    })
-    request.execute()
+    this.props.addEvent(sleepEvent)
   }
 
   render() {
@@ -80,6 +67,8 @@ class AddToCalendar extends Component {
           onBackgroundClick={this.closeModal}
           onEscapeKeydown={this.closeModal}
         >
+          Please select one of the following Zzzzz events to add to your
+          calendar!
           {sleepEvents &&
             sleepEvents.map((sleepEvent, i) => {
               const zStart = moment(sleepEvent.start.dateTime).format('LLLL')
@@ -87,7 +76,6 @@ class AddToCalendar extends Component {
 
               return (
                 <div key={i}>
-                  <p>Zzzzz:</p>
                   From {zStart} to {zEnd}
                   <p>
                     <button
@@ -111,6 +99,12 @@ class AddToCalendar extends Component {
   }
 }
 
-const mapState = ({events}) => ({events})
-
-export default connect(mapState)(AddToCalendar)
+const mapState = ({user, events}) => ({user, events})
+const mapDispatch = (dispatch) => {
+  return {
+    addEvent(event) {
+      dispatch(addEvent(event))
+    },
+  }
+}
+export default connect(mapState, mapDispatch)(AddToCalendar)
