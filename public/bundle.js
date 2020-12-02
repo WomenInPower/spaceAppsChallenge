@@ -681,6 +681,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _calendar_add__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./calendar-add */ "./client/components/calendar-add.js");
 /* harmony import */ var react_big_calendar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-big-calendar */ "./node_modules/react-big-calendar/dist/react-big-calendar.esm.js");
 /* harmony import */ var react_big_calendar_lib_css_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-big-calendar/lib/css/react-big-calendar.css */ "./node_modules/react-big-calendar/lib/css/react-big-calendar.css");
+/* harmony import */ var react_big_calendar_lib_css_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_big_calendar_lib_css_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -719,7 +720,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
- // a localizer for BigCalendar
+ // import 'react-big-calendar/lib/sass/styles';
+// import 'react-big-calendar/lib/addons/dragAndDrop/styles';
+// a localizer for BigCalendar
 
 var localizer = Object(react_big_calendar__WEBPACK_IMPORTED_MODULE_4__["momentLocalizer"])(moment_timezone__WEBPACK_IMPORTED_MODULE_2___default.a);
 
@@ -1049,13 +1052,15 @@ socket.on('connect', function () {
 /*!**********************************!*\
   !*** ./client/store/calendar.js ***!
   \**********************************/
-/*! exports provided: addEvent, loadEvents, default */
+/*! exports provided: addEvent, loadEvents, removeEvent, putEvent, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEvent", function() { return addEvent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadEvents", function() { return loadEvents; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeEvent", function() { return removeEvent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "putEvent", function() { return putEvent; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -1082,6 +1087,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var INSERT_EVENT = 'INSERT_EVENT';
 var GET_EVENTS = 'GET_EVENTS';
+var DELETE_EVENT = 'DELETE_EVENT';
+var UPDATE_EVENT = 'UPDATE_EVENT';
 /**
  * INITIAL STATE
  */
@@ -1102,6 +1109,21 @@ var getEvents = function getEvents(events) {
   return {
     type: GET_EVENTS,
     events: events
+  };
+};
+
+var deleteEvent = function deleteEvent(id) {
+  return {
+    type: DELETE_EVENT,
+    id: id
+  };
+};
+
+var updateEvent = function updateEvent(id, event) {
+  return {
+    type: UPDATE_EVENT,
+    id: id,
+    event: event
   };
 };
 /**
@@ -1184,6 +1206,76 @@ var loadEvents = function loadEvents() {
     };
   }();
 };
+var removeEvent = function removeEvent(id) {
+  return /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(dispatch) {
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              _context3.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"]('/auth/event', id);
+
+            case 3:
+              dispatch(deleteEvent(id || defaultEvents));
+              _context3.next = 9;
+              break;
+
+            case 6:
+              _context3.prev = 6;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
+
+            case 9:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 6]]);
+    }));
+
+    return function (_x3) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+};
+var putEvent = function putEvent(event) {
+  return /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(dispatch) {
+      var res;
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              _context4.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default.a.put('/auth/event', event);
+
+            case 3:
+              res = _context4.sent;
+              dispatch(updateEvent(res.data || defaultEvents));
+              _context4.next = 10;
+              break;
+
+            case 7:
+              _context4.prev = 7;
+              _context4.t0 = _context4["catch"](0);
+              console.log(_context4.t0);
+
+            case 10:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 7]]);
+    }));
+
+    return function (_x4) {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+};
 /**
  * REDUCER
  */
@@ -1199,6 +1291,16 @@ var loadEvents = function loadEvents() {
     case INSERT_EVENT:
       return [].concat(_toConsumableArray(state), [action.event]);
 
+    case DELETE_EVENT:
+      return state.filter(function (event) {
+        return event.id !== action.id;
+      });
+
+    case UPDATE_EVENT:
+      return state.forEach(function (event) {
+        if (event.id === action.id) event = action.event;
+      });
+
     default:
       return state;
   }
@@ -1210,7 +1312,7 @@ var loadEvents = function loadEvents() {
 /*!*******************************!*\
   !*** ./client/store/index.js ***!
   \*******************************/
-/*! exports provided: default, me, logout, addEvent, loadEvents */
+/*! exports provided: default, me, logout, addEvent, loadEvents, removeEvent, putEvent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1230,6 +1332,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addEvent", function() { return _calendar__WEBPACK_IMPORTED_MODULE_5__["addEvent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "loadEvents", function() { return _calendar__WEBPACK_IMPORTED_MODULE_5__["loadEvents"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "removeEvent", function() { return _calendar__WEBPACK_IMPORTED_MODULE_5__["removeEvent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "putEvent", function() { return _calendar__WEBPACK_IMPORTED_MODULE_5__["putEvent"]; });
 
 
 
@@ -17019,151 +17125,6 @@ __webpack_require__(/*! ../modules/web.immediate */ "./node_modules/core-js/modu
 __webpack_require__(/*! ../modules/web.dom.iterable */ "./node_modules/core-js/modules/web.dom.iterable.js");
 module.exports = __webpack_require__(/*! ../modules/_core */ "./node_modules/core-js/modules/_core.js");
 
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/react-big-calendar/lib/css/react-big-calendar.css":
-/*!**************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/react-big-calendar/lib/css/react-big-calendar.css ***!
-  \**************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../css-loader/dist/runtime/cssWithMappingToString.js */ "./node_modules/css-loader/dist/runtime/cssWithMappingToString.js");
-/* harmony import */ var _css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
-/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
-// Imports
-
-
-var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()(_css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0___default.a);
-// Module
-___CSS_LOADER_EXPORT___.push([module.i, "@charset \"UTF-8\";\n.rbc-btn {\n  color: inherit;\n  font: inherit;\n  margin: 0; }\n\nbutton.rbc-btn {\n  overflow: visible;\n  text-transform: none;\n  -webkit-appearance: button;\n  cursor: pointer; }\n\nbutton[disabled].rbc-btn {\n  cursor: not-allowed; }\n\nbutton.rbc-input::-moz-focus-inner {\n  border: 0;\n  padding: 0; }\n\n.rbc-calendar {\n  box-sizing: border-box;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch; }\n\n.rbc-calendar *,\n.rbc-calendar *:before,\n.rbc-calendar *:after {\n  box-sizing: inherit; }\n\n.rbc-abs-full, .rbc-row-bg {\n  overflow: hidden;\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0; }\n\n.rbc-ellipsis, .rbc-event-label, .rbc-row-segment .rbc-event-content, .rbc-show-more {\n  display: block;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap; }\n\n.rbc-rtl {\n  direction: rtl; }\n\n.rbc-off-range {\n  color: #999999; }\n\n.rbc-off-range-bg {\n  background: #e6e6e6; }\n\n.rbc-header {\n  overflow: hidden;\n  flex: 1 0 0%;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  padding: 0 3px;\n  text-align: center;\n  vertical-align: middle;\n  font-weight: bold;\n  font-size: 90%;\n  min-height: 0;\n  border-bottom: 1px solid #DDD; }\n  .rbc-header + .rbc-header {\n    border-left: 1px solid #DDD; }\n  .rbc-rtl .rbc-header + .rbc-header {\n    border-left-width: 0;\n    border-right: 1px solid #DDD; }\n  .rbc-header > a, .rbc-header > a:active, .rbc-header > a:visited {\n    color: inherit;\n    text-decoration: none; }\n\n.rbc-row-content {\n  position: relative;\n  user-select: none;\n  -webkit-user-select: none;\n  z-index: 4; }\n\n.rbc-today {\n  background-color: #eaf6ff; }\n\n.rbc-toolbar {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 10px;\n  font-size: 16px; }\n  .rbc-toolbar .rbc-toolbar-label {\n    flex-grow: 1;\n    padding: 0 10px;\n    text-align: center; }\n  .rbc-toolbar button {\n    color: #373a3c;\n    display: inline-block;\n    margin: 0;\n    text-align: center;\n    vertical-align: middle;\n    background: none;\n    background-image: none;\n    border: 1px solid #ccc;\n    padding: .375rem 1rem;\n    border-radius: 4px;\n    line-height: normal;\n    white-space: nowrap; }\n    .rbc-toolbar button:active, .rbc-toolbar button.rbc-active {\n      background-image: none;\n      box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);\n      background-color: #e6e6e6;\n      border-color: #adadad; }\n      .rbc-toolbar button:active:hover, .rbc-toolbar button:active:focus, .rbc-toolbar button.rbc-active:hover, .rbc-toolbar button.rbc-active:focus {\n        color: #373a3c;\n        background-color: #d4d4d4;\n        border-color: #8c8c8c; }\n    .rbc-toolbar button:focus {\n      color: #373a3c;\n      background-color: #e6e6e6;\n      border-color: #adadad; }\n    .rbc-toolbar button:hover {\n      color: #373a3c;\n      background-color: #e6e6e6;\n      border-color: #adadad; }\n\n.rbc-btn-group {\n  display: inline-block;\n  white-space: nowrap; }\n  .rbc-btn-group > button:first-child:not(:last-child) {\n    border-top-right-radius: 0;\n    border-bottom-right-radius: 0; }\n  .rbc-btn-group > button:last-child:not(:first-child) {\n    border-top-left-radius: 0;\n    border-bottom-left-radius: 0; }\n  .rbc-rtl .rbc-btn-group > button:first-child:not(:last-child) {\n    border-radius: 4px;\n    border-top-left-radius: 0;\n    border-bottom-left-radius: 0; }\n  .rbc-rtl .rbc-btn-group > button:last-child:not(:first-child) {\n    border-radius: 4px;\n    border-top-right-radius: 0;\n    border-bottom-right-radius: 0; }\n  .rbc-btn-group > button:not(:first-child):not(:last-child) {\n    border-radius: 0; }\n  .rbc-btn-group button + button {\n    margin-left: -1px; }\n  .rbc-rtl .rbc-btn-group button + button {\n    margin-left: 0;\n    margin-right: -1px; }\n  .rbc-btn-group + .rbc-btn-group,\n  .rbc-btn-group + button {\n    margin-left: 10px; }\n\n.rbc-event {\n  border: none;\n  box-sizing: border-box;\n  box-shadow: none;\n  margin: 0;\n  padding: 2px 5px;\n  background-color: #3174ad;\n  border-radius: 5px;\n  color: #fff;\n  cursor: pointer;\n  width: 100%;\n  text-align: left; }\n  .rbc-slot-selecting .rbc-event {\n    cursor: inherit;\n    pointer-events: none; }\n  .rbc-event.rbc-selected {\n    background-color: #265985; }\n  .rbc-event:focus {\n    outline: 5px auto #3b99fc; }\n\n.rbc-event-label {\n  font-size: 80%; }\n\n.rbc-event-overlaps {\n  box-shadow: -1px 1px 5px 0px rgba(51, 51, 51, 0.5); }\n\n.rbc-event-continues-prior {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0; }\n\n.rbc-event-continues-after {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0; }\n\n.rbc-event-continues-earlier {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0; }\n\n.rbc-event-continues-later {\n  border-bottom-left-radius: 0;\n  border-bottom-right-radius: 0; }\n\n.rbc-row {\n  display: flex;\n  flex-direction: row; }\n\n.rbc-row-segment {\n  padding: 0 1px 1px 1px; }\n\n.rbc-selected-cell {\n  background-color: rgba(0, 0, 0, 0.1); }\n\n.rbc-show-more {\n  background-color: rgba(255, 255, 255, 0.3);\n  z-index: 4;\n  font-weight: bold;\n  font-size: 85%;\n  height: auto;\n  line-height: normal; }\n\n.rbc-month-view {\n  position: relative;\n  border: 1px solid #DDD;\n  display: flex;\n  flex-direction: column;\n  flex: 1 0 0;\n  width: 100%;\n  user-select: none;\n  -webkit-user-select: none;\n  height: 100%; }\n\n.rbc-month-header {\n  display: flex;\n  flex-direction: row; }\n\n.rbc-month-row {\n  display: flex;\n  position: relative;\n  flex-direction: column;\n  flex: 1 0 0;\n  flex-basis: 0px;\n  overflow: hidden;\n  height: 100%; }\n  .rbc-month-row + .rbc-month-row {\n    border-top: 1px solid #DDD; }\n\n.rbc-date-cell {\n  flex: 1 1 0;\n  min-width: 0;\n  padding-right: 5px;\n  text-align: right; }\n  .rbc-date-cell.rbc-now {\n    font-weight: bold; }\n  .rbc-date-cell > a, .rbc-date-cell > a:active, .rbc-date-cell > a:visited {\n    color: inherit;\n    text-decoration: none; }\n\n.rbc-row-bg {\n  display: flex;\n  flex-direction: row;\n  flex: 1 0 0;\n  overflow: hidden; }\n\n.rbc-day-bg {\n  flex: 1 0 0%; }\n  .rbc-day-bg + .rbc-day-bg {\n    border-left: 1px solid #DDD; }\n  .rbc-rtl .rbc-day-bg + .rbc-day-bg {\n    border-left-width: 0;\n    border-right: 1px solid #DDD; }\n\n.rbc-overlay {\n  position: absolute;\n  z-index: 5;\n  border: 1px solid #e5e5e5;\n  background-color: #fff;\n  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);\n  padding: 10px; }\n  .rbc-overlay > * + * {\n    margin-top: 1px; }\n\n.rbc-overlay-header {\n  border-bottom: 1px solid #e5e5e5;\n  margin: -10px -10px 5px -10px;\n  padding: 2px 10px; }\n\n.rbc-agenda-view {\n  display: flex;\n  flex-direction: column;\n  flex: 1 0 0;\n  overflow: auto; }\n  .rbc-agenda-view table.rbc-agenda-table {\n    width: 100%;\n    border: 1px solid #DDD;\n    border-spacing: 0;\n    border-collapse: collapse; }\n    .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {\n      padding: 5px 10px;\n      vertical-align: top; }\n    .rbc-agenda-view table.rbc-agenda-table .rbc-agenda-time-cell {\n      padding-left: 15px;\n      padding-right: 15px;\n      text-transform: lowercase; }\n    .rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {\n      border-left: 1px solid #DDD; }\n    .rbc-rtl .rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {\n      border-left-width: 0;\n      border-right: 1px solid #DDD; }\n    .rbc-agenda-view table.rbc-agenda-table tbody > tr + tr {\n      border-top: 1px solid #DDD; }\n    .rbc-agenda-view table.rbc-agenda-table thead > tr > th {\n      padding: 3px 5px;\n      text-align: left;\n      border-bottom: 1px solid #DDD; }\n      .rbc-rtl .rbc-agenda-view table.rbc-agenda-table thead > tr > th {\n        text-align: right; }\n\n.rbc-agenda-time-cell {\n  text-transform: lowercase; }\n  .rbc-agenda-time-cell .rbc-continues-after:after {\n    content: ' »'; }\n  .rbc-agenda-time-cell .rbc-continues-prior:before {\n    content: '« '; }\n\n.rbc-agenda-date-cell,\n.rbc-agenda-time-cell {\n  white-space: nowrap; }\n\n.rbc-agenda-event-cell {\n  width: 100%; }\n\n.rbc-time-column {\n  display: flex;\n  flex-direction: column;\n  min-height: 100%;\n  height: 100%; }\n  .rbc-time-column .rbc-timeslot-group {\n    flex: 1; }\n\n.rbc-timeslot-group {\n  border-bottom: 1px solid #DDD;\n  min-height: 40px;\n  display: flex;\n  flex-flow: column nowrap; }\n\n.rbc-time-gutter,\n.rbc-header-gutter {\n  flex: none; }\n\n.rbc-label {\n  padding: 0 5px; }\n\n.rbc-day-slot {\n  position: relative; }\n  .rbc-day-slot .rbc-events-container {\n    bottom: 0;\n    left: 0;\n    position: absolute;\n    right: 0;\n    margin-right: 10px;\n    top: 0; }\n    .rbc-day-slot .rbc-events-container.rbc-rtl {\n      left: 10px;\n      right: 0; }\n  .rbc-day-slot .rbc-event {\n    border: 1px solid #265985;\n    display: flex;\n    max-height: 100%;\n    min-height: 20px;\n    flex-flow: column wrap;\n    align-items: flex-start;\n    overflow: hidden;\n    position: absolute; }\n  .rbc-day-slot .rbc-event-label {\n    flex: none;\n    padding-right: 5px;\n    width: auto; }\n  .rbc-day-slot .rbc-event-content {\n    width: 100%;\n    flex: 1 1 0;\n    word-wrap: break-word;\n    line-height: 1;\n    height: 100%;\n    min-height: 1em; }\n  .rbc-day-slot .rbc-time-slot {\n    border-top: 1px solid #f7f7f7; }\n\n.rbc-time-view-resources .rbc-time-gutter,\n.rbc-time-view-resources .rbc-time-header-gutter {\n  position: sticky;\n  left: 0;\n  background-color: white;\n  border-right: 1px solid #DDD;\n  z-index: 10;\n  margin-right: -1px; }\n\n.rbc-time-view-resources .rbc-time-header {\n  overflow: hidden; }\n\n.rbc-time-view-resources .rbc-time-header-content {\n  min-width: auto;\n  flex: 1 0 0;\n  flex-basis: 0px; }\n\n.rbc-time-view-resources .rbc-time-header-cell-single-day {\n  display: none; }\n\n.rbc-time-view-resources .rbc-day-slot {\n  min-width: 140px; }\n\n.rbc-time-view-resources .rbc-header,\n.rbc-time-view-resources .rbc-day-bg {\n  width: 140px;\n  flex: 1 1 0;\n  flex-basis: 0 px; }\n\n.rbc-time-header-content + .rbc-time-header-content {\n  margin-left: -1px; }\n\n.rbc-time-slot {\n  flex: 1 0 0; }\n  .rbc-time-slot.rbc-now {\n    font-weight: bold; }\n\n.rbc-day-header {\n  text-align: center; }\n\n.rbc-slot-selection {\n  z-index: 10;\n  position: absolute;\n  background-color: rgba(0, 0, 0, 0.5);\n  color: white;\n  font-size: 75%;\n  width: 100%;\n  padding: 3px; }\n\n.rbc-slot-selecting {\n  cursor: move; }\n\n.rbc-time-view {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  width: 100%;\n  border: 1px solid #DDD;\n  min-height: 0; }\n  .rbc-time-view .rbc-time-gutter {\n    white-space: nowrap; }\n  .rbc-time-view .rbc-allday-cell {\n    box-sizing: content-box;\n    width: 100%;\n    height: 100%;\n    position: relative; }\n  .rbc-time-view .rbc-allday-cell + .rbc-allday-cell {\n    border-left: 1px solid #DDD; }\n  .rbc-time-view .rbc-allday-events {\n    position: relative;\n    z-index: 4; }\n  .rbc-time-view .rbc-row {\n    box-sizing: border-box;\n    min-height: 20px; }\n\n.rbc-time-header {\n  display: flex;\n  flex: 0 0 auto;\n  flex-direction: row; }\n  .rbc-time-header.rbc-overflowing {\n    border-right: 1px solid #DDD; }\n  .rbc-rtl .rbc-time-header.rbc-overflowing {\n    border-right-width: 0;\n    border-left: 1px solid #DDD; }\n  .rbc-time-header > .rbc-row:first-child {\n    border-bottom: 1px solid #DDD; }\n  .rbc-time-header > .rbc-row.rbc-row-resource {\n    border-bottom: 1px solid #DDD; }\n\n.rbc-time-header-cell-single-day {\n  display: none; }\n\n.rbc-time-header-content {\n  flex: 1;\n  display: flex;\n  min-width: 0;\n  flex-direction: column;\n  border-left: 1px solid #DDD; }\n  .rbc-rtl .rbc-time-header-content {\n    border-left-width: 0;\n    border-right: 1px solid #DDD; }\n  .rbc-time-header-content > .rbc-row.rbc-row-resource {\n    border-bottom: 1px solid #DDD;\n    flex-shrink: 0; }\n\n.rbc-time-content {\n  display: flex;\n  flex: 1 0 0%;\n  align-items: flex-start;\n  width: 100%;\n  border-top: 2px solid #DDD;\n  overflow-y: auto;\n  position: relative; }\n  .rbc-time-content > .rbc-time-gutter {\n    flex: none; }\n  .rbc-time-content > * + * > * {\n    border-left: 1px solid #DDD; }\n  .rbc-rtl .rbc-time-content > * + * > * {\n    border-left-width: 0;\n    border-right: 1px solid #DDD; }\n  .rbc-time-content > .rbc-day-slot {\n    width: 100%;\n    user-select: none;\n    -webkit-user-select: none; }\n\n.rbc-current-time-indicator {\n  position: absolute;\n  z-index: 3;\n  left: 0;\n  right: 0;\n  height: 1px;\n  background-color: #74ad31;\n  pointer-events: none; }\n", "",{"version":3,"sources":["webpack://./node_modules/react-big-calendar/lib/css/react-big-calendar.css"],"names":[],"mappings":"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","sourcesContent":["@charset \"UTF-8\";\n.rbc-btn {\n  color: inherit;\n  font: inherit;\n  margin: 0; }\n\nbutton.rbc-btn {\n  overflow: visible;\n  text-transform: none;\n  -webkit-appearance: button;\n  cursor: pointer; }\n\nbutton[disabled].rbc-btn {\n  cursor: not-allowed; }\n\nbutton.rbc-input::-moz-focus-inner {\n  border: 0;\n  padding: 0; }\n\n.rbc-calendar {\n  box-sizing: border-box;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch; }\n\n.rbc-calendar *,\n.rbc-calendar *:before,\n.rbc-calendar *:after {\n  box-sizing: inherit; }\n\n.rbc-abs-full, .rbc-row-bg {\n  overflow: hidden;\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0; }\n\n.rbc-ellipsis, .rbc-event-label, .rbc-row-segment .rbc-event-content, .rbc-show-more {\n  display: block;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap; }\n\n.rbc-rtl {\n  direction: rtl; }\n\n.rbc-off-range {\n  color: #999999; }\n\n.rbc-off-range-bg {\n  background: #e6e6e6; }\n\n.rbc-header {\n  overflow: hidden;\n  flex: 1 0 0%;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  padding: 0 3px;\n  text-align: center;\n  vertical-align: middle;\n  font-weight: bold;\n  font-size: 90%;\n  min-height: 0;\n  border-bottom: 1px solid #DDD; }\n  .rbc-header + .rbc-header {\n    border-left: 1px solid #DDD; }\n  .rbc-rtl .rbc-header + .rbc-header {\n    border-left-width: 0;\n    border-right: 1px solid #DDD; }\n  .rbc-header > a, .rbc-header > a:active, .rbc-header > a:visited {\n    color: inherit;\n    text-decoration: none; }\n\n.rbc-row-content {\n  position: relative;\n  user-select: none;\n  -webkit-user-select: none;\n  z-index: 4; }\n\n.rbc-today {\n  background-color: #eaf6ff; }\n\n.rbc-toolbar {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  margin-bottom: 10px;\n  font-size: 16px; }\n  .rbc-toolbar .rbc-toolbar-label {\n    flex-grow: 1;\n    padding: 0 10px;\n    text-align: center; }\n  .rbc-toolbar button {\n    color: #373a3c;\n    display: inline-block;\n    margin: 0;\n    text-align: center;\n    vertical-align: middle;\n    background: none;\n    background-image: none;\n    border: 1px solid #ccc;\n    padding: .375rem 1rem;\n    border-radius: 4px;\n    line-height: normal;\n    white-space: nowrap; }\n    .rbc-toolbar button:active, .rbc-toolbar button.rbc-active {\n      background-image: none;\n      box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);\n      background-color: #e6e6e6;\n      border-color: #adadad; }\n      .rbc-toolbar button:active:hover, .rbc-toolbar button:active:focus, .rbc-toolbar button.rbc-active:hover, .rbc-toolbar button.rbc-active:focus {\n        color: #373a3c;\n        background-color: #d4d4d4;\n        border-color: #8c8c8c; }\n    .rbc-toolbar button:focus {\n      color: #373a3c;\n      background-color: #e6e6e6;\n      border-color: #adadad; }\n    .rbc-toolbar button:hover {\n      color: #373a3c;\n      background-color: #e6e6e6;\n      border-color: #adadad; }\n\n.rbc-btn-group {\n  display: inline-block;\n  white-space: nowrap; }\n  .rbc-btn-group > button:first-child:not(:last-child) {\n    border-top-right-radius: 0;\n    border-bottom-right-radius: 0; }\n  .rbc-btn-group > button:last-child:not(:first-child) {\n    border-top-left-radius: 0;\n    border-bottom-left-radius: 0; }\n  .rbc-rtl .rbc-btn-group > button:first-child:not(:last-child) {\n    border-radius: 4px;\n    border-top-left-radius: 0;\n    border-bottom-left-radius: 0; }\n  .rbc-rtl .rbc-btn-group > button:last-child:not(:first-child) {\n    border-radius: 4px;\n    border-top-right-radius: 0;\n    border-bottom-right-radius: 0; }\n  .rbc-btn-group > button:not(:first-child):not(:last-child) {\n    border-radius: 0; }\n  .rbc-btn-group button + button {\n    margin-left: -1px; }\n  .rbc-rtl .rbc-btn-group button + button {\n    margin-left: 0;\n    margin-right: -1px; }\n  .rbc-btn-group + .rbc-btn-group,\n  .rbc-btn-group + button {\n    margin-left: 10px; }\n\n.rbc-event {\n  border: none;\n  box-sizing: border-box;\n  box-shadow: none;\n  margin: 0;\n  padding: 2px 5px;\n  background-color: #3174ad;\n  border-radius: 5px;\n  color: #fff;\n  cursor: pointer;\n  width: 100%;\n  text-align: left; }\n  .rbc-slot-selecting .rbc-event {\n    cursor: inherit;\n    pointer-events: none; }\n  .rbc-event.rbc-selected {\n    background-color: #265985; }\n  .rbc-event:focus {\n    outline: 5px auto #3b99fc; }\n\n.rbc-event-label {\n  font-size: 80%; }\n\n.rbc-event-overlaps {\n  box-shadow: -1px 1px 5px 0px rgba(51, 51, 51, 0.5); }\n\n.rbc-event-continues-prior {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0; }\n\n.rbc-event-continues-after {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0; }\n\n.rbc-event-continues-earlier {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0; }\n\n.rbc-event-continues-later {\n  border-bottom-left-radius: 0;\n  border-bottom-right-radius: 0; }\n\n.rbc-row {\n  display: flex;\n  flex-direction: row; }\n\n.rbc-row-segment {\n  padding: 0 1px 1px 1px; }\n\n.rbc-selected-cell {\n  background-color: rgba(0, 0, 0, 0.1); }\n\n.rbc-show-more {\n  background-color: rgba(255, 255, 255, 0.3);\n  z-index: 4;\n  font-weight: bold;\n  font-size: 85%;\n  height: auto;\n  line-height: normal; }\n\n.rbc-month-view {\n  position: relative;\n  border: 1px solid #DDD;\n  display: flex;\n  flex-direction: column;\n  flex: 1 0 0;\n  width: 100%;\n  user-select: none;\n  -webkit-user-select: none;\n  height: 100%; }\n\n.rbc-month-header {\n  display: flex;\n  flex-direction: row; }\n\n.rbc-month-row {\n  display: flex;\n  position: relative;\n  flex-direction: column;\n  flex: 1 0 0;\n  flex-basis: 0px;\n  overflow: hidden;\n  height: 100%; }\n  .rbc-month-row + .rbc-month-row {\n    border-top: 1px solid #DDD; }\n\n.rbc-date-cell {\n  flex: 1 1 0;\n  min-width: 0;\n  padding-right: 5px;\n  text-align: right; }\n  .rbc-date-cell.rbc-now {\n    font-weight: bold; }\n  .rbc-date-cell > a, .rbc-date-cell > a:active, .rbc-date-cell > a:visited {\n    color: inherit;\n    text-decoration: none; }\n\n.rbc-row-bg {\n  display: flex;\n  flex-direction: row;\n  flex: 1 0 0;\n  overflow: hidden; }\n\n.rbc-day-bg {\n  flex: 1 0 0%; }\n  .rbc-day-bg + .rbc-day-bg {\n    border-left: 1px solid #DDD; }\n  .rbc-rtl .rbc-day-bg + .rbc-day-bg {\n    border-left-width: 0;\n    border-right: 1px solid #DDD; }\n\n.rbc-overlay {\n  position: absolute;\n  z-index: 5;\n  border: 1px solid #e5e5e5;\n  background-color: #fff;\n  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);\n  padding: 10px; }\n  .rbc-overlay > * + * {\n    margin-top: 1px; }\n\n.rbc-overlay-header {\n  border-bottom: 1px solid #e5e5e5;\n  margin: -10px -10px 5px -10px;\n  padding: 2px 10px; }\n\n.rbc-agenda-view {\n  display: flex;\n  flex-direction: column;\n  flex: 1 0 0;\n  overflow: auto; }\n  .rbc-agenda-view table.rbc-agenda-table {\n    width: 100%;\n    border: 1px solid #DDD;\n    border-spacing: 0;\n    border-collapse: collapse; }\n    .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {\n      padding: 5px 10px;\n      vertical-align: top; }\n    .rbc-agenda-view table.rbc-agenda-table .rbc-agenda-time-cell {\n      padding-left: 15px;\n      padding-right: 15px;\n      text-transform: lowercase; }\n    .rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {\n      border-left: 1px solid #DDD; }\n    .rbc-rtl .rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {\n      border-left-width: 0;\n      border-right: 1px solid #DDD; }\n    .rbc-agenda-view table.rbc-agenda-table tbody > tr + tr {\n      border-top: 1px solid #DDD; }\n    .rbc-agenda-view table.rbc-agenda-table thead > tr > th {\n      padding: 3px 5px;\n      text-align: left;\n      border-bottom: 1px solid #DDD; }\n      .rbc-rtl .rbc-agenda-view table.rbc-agenda-table thead > tr > th {\n        text-align: right; }\n\n.rbc-agenda-time-cell {\n  text-transform: lowercase; }\n  .rbc-agenda-time-cell .rbc-continues-after:after {\n    content: ' »'; }\n  .rbc-agenda-time-cell .rbc-continues-prior:before {\n    content: '« '; }\n\n.rbc-agenda-date-cell,\n.rbc-agenda-time-cell {\n  white-space: nowrap; }\n\n.rbc-agenda-event-cell {\n  width: 100%; }\n\n.rbc-time-column {\n  display: flex;\n  flex-direction: column;\n  min-height: 100%;\n  height: 100%; }\n  .rbc-time-column .rbc-timeslot-group {\n    flex: 1; }\n\n.rbc-timeslot-group {\n  border-bottom: 1px solid #DDD;\n  min-height: 40px;\n  display: flex;\n  flex-flow: column nowrap; }\n\n.rbc-time-gutter,\n.rbc-header-gutter {\n  flex: none; }\n\n.rbc-label {\n  padding: 0 5px; }\n\n.rbc-day-slot {\n  position: relative; }\n  .rbc-day-slot .rbc-events-container {\n    bottom: 0;\n    left: 0;\n    position: absolute;\n    right: 0;\n    margin-right: 10px;\n    top: 0; }\n    .rbc-day-slot .rbc-events-container.rbc-rtl {\n      left: 10px;\n      right: 0; }\n  .rbc-day-slot .rbc-event {\n    border: 1px solid #265985;\n    display: flex;\n    max-height: 100%;\n    min-height: 20px;\n    flex-flow: column wrap;\n    align-items: flex-start;\n    overflow: hidden;\n    position: absolute; }\n  .rbc-day-slot .rbc-event-label {\n    flex: none;\n    padding-right: 5px;\n    width: auto; }\n  .rbc-day-slot .rbc-event-content {\n    width: 100%;\n    flex: 1 1 0;\n    word-wrap: break-word;\n    line-height: 1;\n    height: 100%;\n    min-height: 1em; }\n  .rbc-day-slot .rbc-time-slot {\n    border-top: 1px solid #f7f7f7; }\n\n.rbc-time-view-resources .rbc-time-gutter,\n.rbc-time-view-resources .rbc-time-header-gutter {\n  position: sticky;\n  left: 0;\n  background-color: white;\n  border-right: 1px solid #DDD;\n  z-index: 10;\n  margin-right: -1px; }\n\n.rbc-time-view-resources .rbc-time-header {\n  overflow: hidden; }\n\n.rbc-time-view-resources .rbc-time-header-content {\n  min-width: auto;\n  flex: 1 0 0;\n  flex-basis: 0px; }\n\n.rbc-time-view-resources .rbc-time-header-cell-single-day {\n  display: none; }\n\n.rbc-time-view-resources .rbc-day-slot {\n  min-width: 140px; }\n\n.rbc-time-view-resources .rbc-header,\n.rbc-time-view-resources .rbc-day-bg {\n  width: 140px;\n  flex: 1 1 0;\n  flex-basis: 0 px; }\n\n.rbc-time-header-content + .rbc-time-header-content {\n  margin-left: -1px; }\n\n.rbc-time-slot {\n  flex: 1 0 0; }\n  .rbc-time-slot.rbc-now {\n    font-weight: bold; }\n\n.rbc-day-header {\n  text-align: center; }\n\n.rbc-slot-selection {\n  z-index: 10;\n  position: absolute;\n  background-color: rgba(0, 0, 0, 0.5);\n  color: white;\n  font-size: 75%;\n  width: 100%;\n  padding: 3px; }\n\n.rbc-slot-selecting {\n  cursor: move; }\n\n.rbc-time-view {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  width: 100%;\n  border: 1px solid #DDD;\n  min-height: 0; }\n  .rbc-time-view .rbc-time-gutter {\n    white-space: nowrap; }\n  .rbc-time-view .rbc-allday-cell {\n    box-sizing: content-box;\n    width: 100%;\n    height: 100%;\n    position: relative; }\n  .rbc-time-view .rbc-allday-cell + .rbc-allday-cell {\n    border-left: 1px solid #DDD; }\n  .rbc-time-view .rbc-allday-events {\n    position: relative;\n    z-index: 4; }\n  .rbc-time-view .rbc-row {\n    box-sizing: border-box;\n    min-height: 20px; }\n\n.rbc-time-header {\n  display: flex;\n  flex: 0 0 auto;\n  flex-direction: row; }\n  .rbc-time-header.rbc-overflowing {\n    border-right: 1px solid #DDD; }\n  .rbc-rtl .rbc-time-header.rbc-overflowing {\n    border-right-width: 0;\n    border-left: 1px solid #DDD; }\n  .rbc-time-header > .rbc-row:first-child {\n    border-bottom: 1px solid #DDD; }\n  .rbc-time-header > .rbc-row.rbc-row-resource {\n    border-bottom: 1px solid #DDD; }\n\n.rbc-time-header-cell-single-day {\n  display: none; }\n\n.rbc-time-header-content {\n  flex: 1;\n  display: flex;\n  min-width: 0;\n  flex-direction: column;\n  border-left: 1px solid #DDD; }\n  .rbc-rtl .rbc-time-header-content {\n    border-left-width: 0;\n    border-right: 1px solid #DDD; }\n  .rbc-time-header-content > .rbc-row.rbc-row-resource {\n    border-bottom: 1px solid #DDD;\n    flex-shrink: 0; }\n\n.rbc-time-content {\n  display: flex;\n  flex: 1 0 0%;\n  align-items: flex-start;\n  width: 100%;\n  border-top: 2px solid #DDD;\n  overflow-y: auto;\n  position: relative; }\n  .rbc-time-content > .rbc-time-gutter {\n    flex: none; }\n  .rbc-time-content > * + * > * {\n    border-left: 1px solid #DDD; }\n  .rbc-rtl .rbc-time-content > * + * > * {\n    border-left-width: 0;\n    border-right: 1px solid #DDD; }\n  .rbc-time-content > .rbc-day-slot {\n    width: 100%;\n    user-select: none;\n    -webkit-user-select: none; }\n\n.rbc-current-time-indicator {\n  position: absolute;\n  z-index: 3;\n  left: 0;\n  right: 0;\n  height: 1px;\n  background-color: #74ad31;\n  pointer-events: none; }\n"],"sourceRoot":""}]);
-// Exports
-/* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/runtime/api.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/css-loader/dist/runtime/api.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-// eslint-disable-next-line func-names
-module.exports = function (cssWithMappingToString) {
-  var list = []; // return the list of modules as css string
-
-  list.toString = function toString() {
-    return this.map(function (item) {
-      var content = cssWithMappingToString(item);
-
-      if (item[2]) {
-        return "@media ".concat(item[2], " {").concat(content, "}");
-      }
-
-      return content;
-    }).join('');
-  }; // import a list of modules into the list
-  // eslint-disable-next-line func-names
-
-
-  list.i = function (modules, mediaQuery, dedupe) {
-    if (typeof modules === 'string') {
-      // eslint-disable-next-line no-param-reassign
-      modules = [[null, modules, '']];
-    }
-
-    var alreadyImportedModules = {};
-
-    if (dedupe) {
-      for (var i = 0; i < this.length; i++) {
-        // eslint-disable-next-line prefer-destructuring
-        var id = this[i][0];
-
-        if (id != null) {
-          alreadyImportedModules[id] = true;
-        }
-      }
-    }
-
-    for (var _i = 0; _i < modules.length; _i++) {
-      var item = [].concat(modules[_i]);
-
-      if (dedupe && alreadyImportedModules[item[0]]) {
-        // eslint-disable-next-line no-continue
-        continue;
-      }
-
-      if (mediaQuery) {
-        if (!item[2]) {
-          item[2] = mediaQuery;
-        } else {
-          item[2] = "".concat(mediaQuery, " and ").concat(item[2]);
-        }
-      }
-
-      list.push(item);
-    }
-  };
-
-  return list;
-};
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/runtime/cssWithMappingToString.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/runtime/cssWithMappingToString.js ***!
-  \************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-module.exports = function cssWithMappingToString(item) {
-  var _item = _slicedToArray(item, 4),
-      content = _item[1],
-      cssMapping = _item[3];
-
-  if (typeof btoa === 'function') {
-    // eslint-disable-next-line no-undef
-    var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(cssMapping))));
-    var data = "sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(base64);
-    var sourceMapping = "/*# ".concat(data, " */");
-    var sourceURLs = cssMapping.sources.map(function (source) {
-      return "/*# sourceURL=".concat(cssMapping.sourceRoot || '').concat(source, " */");
-    });
-    return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-  }
-
-  return [content].join('\n');
-};
 
 /***/ }),
 
@@ -62769,27 +62730,10 @@ var components = {
 /*!************************************************************************!*\
   !*** ./node_modules/react-big-calendar/lib/css/react-big-calendar.css ***!
   \************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _css_loader_dist_cjs_js_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../css-loader/dist/cjs.js!./react-big-calendar.css */ "./node_modules/css-loader/dist/cjs.js!./node_modules/react-big-calendar/lib/css/react-big-calendar.css");
-
-            
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = (_css_loader_dist_cjs_js_react_big_calendar_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+throw new Error("Module parse failed: Unexpected character '@' (1:0)\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\n> @charset \"UTF-8\";\n| .rbc-btn {\n|   color: inherit;");
 
 /***/ }),
 
@@ -101601,286 +101545,6 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-
-/***/ }),
-
-/***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
-  \****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isOldIE = function isOldIE() {
-  var memo;
-  return function memorize() {
-    if (typeof memo === 'undefined') {
-      // Test for IE <= 9 as proposed by Browserhacks
-      // @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
-      // Tests for existence of standard globals is to allow style-loader
-      // to operate correctly into non-standard environments
-      // @see https://github.com/webpack-contrib/style-loader/issues/177
-      memo = Boolean(window && document && document.all && !window.atob);
-    }
-
-    return memo;
-  };
-}();
-
-var getTarget = function getTarget() {
-  var memo = {};
-  return function memorize(target) {
-    if (typeof memo[target] === 'undefined') {
-      var styleTarget = document.querySelector(target); // Special case to return head of iframe instead of iframe itself
-
-      if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
-        try {
-          // This will throw an exception if access to iframe is blocked
-          // due to cross-origin restrictions
-          styleTarget = styleTarget.contentDocument.head;
-        } catch (e) {
-          // istanbul ignore next
-          styleTarget = null;
-        }
-      }
-
-      memo[target] = styleTarget;
-    }
-
-    return memo[target];
-  };
-}();
-
-var stylesInDom = [];
-
-function getIndexByIdentifier(identifier) {
-  var result = -1;
-
-  for (var i = 0; i < stylesInDom.length; i++) {
-    if (stylesInDom[i].identifier === identifier) {
-      result = i;
-      break;
-    }
-  }
-
-  return result;
-}
-
-function modulesToDom(list, options) {
-  var idCountMap = {};
-  var identifiers = [];
-
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i];
-    var id = options.base ? item[0] + options.base : item[0];
-    var count = idCountMap[id] || 0;
-    var identifier = "".concat(id, " ").concat(count);
-    idCountMap[id] = count + 1;
-    var index = getIndexByIdentifier(identifier);
-    var obj = {
-      css: item[1],
-      media: item[2],
-      sourceMap: item[3]
-    };
-
-    if (index !== -1) {
-      stylesInDom[index].references++;
-      stylesInDom[index].updater(obj);
-    } else {
-      stylesInDom.push({
-        identifier: identifier,
-        updater: addStyle(obj, options),
-        references: 1
-      });
-    }
-
-    identifiers.push(identifier);
-  }
-
-  return identifiers;
-}
-
-function insertStyleElement(options) {
-  var style = document.createElement('style');
-  var attributes = options.attributes || {};
-
-  if (typeof attributes.nonce === 'undefined') {
-    var nonce =  true ? __webpack_require__.nc : undefined;
-
-    if (nonce) {
-      attributes.nonce = nonce;
-    }
-  }
-
-  Object.keys(attributes).forEach(function (key) {
-    style.setAttribute(key, attributes[key]);
-  });
-
-  if (typeof options.insert === 'function') {
-    options.insert(style);
-  } else {
-    var target = getTarget(options.insert || 'head');
-
-    if (!target) {
-      throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
-    }
-
-    target.appendChild(style);
-  }
-
-  return style;
-}
-
-function removeStyleElement(style) {
-  // istanbul ignore if
-  if (style.parentNode === null) {
-    return false;
-  }
-
-  style.parentNode.removeChild(style);
-}
-/* istanbul ignore next  */
-
-
-var replaceText = function replaceText() {
-  var textStore = [];
-  return function replace(index, replacement) {
-    textStore[index] = replacement;
-    return textStore.filter(Boolean).join('\n');
-  };
-}();
-
-function applyToSingletonTag(style, index, remove, obj) {
-  var css = remove ? '' : obj.media ? "@media ".concat(obj.media, " {").concat(obj.css, "}") : obj.css; // For old IE
-
-  /* istanbul ignore if  */
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = replaceText(index, css);
-  } else {
-    var cssNode = document.createTextNode(css);
-    var childNodes = style.childNodes;
-
-    if (childNodes[index]) {
-      style.removeChild(childNodes[index]);
-    }
-
-    if (childNodes.length) {
-      style.insertBefore(cssNode, childNodes[index]);
-    } else {
-      style.appendChild(cssNode);
-    }
-  }
-}
-
-function applyToTag(style, options, obj) {
-  var css = obj.css;
-  var media = obj.media;
-  var sourceMap = obj.sourceMap;
-
-  if (media) {
-    style.setAttribute('media', media);
-  } else {
-    style.removeAttribute('media');
-  }
-
-  if (sourceMap && typeof btoa !== 'undefined') {
-    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
-  } // For old IE
-
-  /* istanbul ignore if  */
-
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    while (style.firstChild) {
-      style.removeChild(style.firstChild);
-    }
-
-    style.appendChild(document.createTextNode(css));
-  }
-}
-
-var singleton = null;
-var singletonCounter = 0;
-
-function addStyle(obj, options) {
-  var style;
-  var update;
-  var remove;
-
-  if (options.singleton) {
-    var styleIndex = singletonCounter++;
-    style = singleton || (singleton = insertStyleElement(options));
-    update = applyToSingletonTag.bind(null, style, styleIndex, false);
-    remove = applyToSingletonTag.bind(null, style, styleIndex, true);
-  } else {
-    style = insertStyleElement(options);
-    update = applyToTag.bind(null, style, options);
-
-    remove = function remove() {
-      removeStyleElement(style);
-    };
-  }
-
-  update(obj);
-  return function updateStyle(newObj) {
-    if (newObj) {
-      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap) {
-        return;
-      }
-
-      update(obj = newObj);
-    } else {
-      remove();
-    }
-  };
-}
-
-module.exports = function (list, options) {
-  options = options || {}; // Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-  // tags it will allow on a page
-
-  if (!options.singleton && typeof options.singleton !== 'boolean') {
-    options.singleton = isOldIE();
-  }
-
-  list = list || [];
-  var lastIdentifiers = modulesToDom(list, options);
-  return function update(newList) {
-    newList = newList || [];
-
-    if (Object.prototype.toString.call(newList) !== '[object Array]') {
-      return;
-    }
-
-    for (var i = 0; i < lastIdentifiers.length; i++) {
-      var identifier = lastIdentifiers[i];
-      var index = getIndexByIdentifier(identifier);
-      stylesInDom[index].references--;
-    }
-
-    var newLastIdentifiers = modulesToDom(newList, options);
-
-    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
-      var _identifier = lastIdentifiers[_i];
-
-      var _index = getIndexByIdentifier(_identifier);
-
-      if (stylesInDom[_index].references === 0) {
-        stylesInDom[_index].updater();
-
-        stylesInDom.splice(_index, 1);
-      }
-    }
-
-    lastIdentifiers = newLastIdentifiers;
-  };
-};
 
 /***/ }),
 

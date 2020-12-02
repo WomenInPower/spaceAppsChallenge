@@ -79,4 +79,55 @@ router.post('/event', async (req, res, next) => {
   }
 })
 
+router.put('/event', async (req, res, next) => {
+  try {
+    const {user} = req.session
+    const eventId = req.body.id
+    if (user) {
+      const oauth2Client = new google.auth.OAuth2()
+      oauth2Client.setCredentials({
+        // eslint-disable-next-line camelcase
+        access_token: user.accessToken,
+      })
+      const calendar = google.calendar({version: 'v3', auth: oauth2Client})
+      const response = await calendar.events.get({
+        calendarId: 'primary',
+        eventId,
+      })
+
+      const updated = await calendar.events.update({
+        calendarId: 'primary',
+        eventId: response.data.id,
+        resource: req.body,
+      })
+
+      res.json(updated)
+    }
+  } catch (e) {
+    next(e)
+  }
+})
+
+router.delete('/event', async (req, res, next) => {
+  try {
+    const {user} = req.session
+    const eventId = req.body
+    if (user) {
+      const oauth2Client = new google.auth.OAuth2()
+      oauth2Client.setCredentials({
+        // eslint-disable-next-line camelcase
+        access_token: user.accessToken,
+      })
+      const calendar = google.calendar({version: 'v3', auth: oauth2Client})
+      await calendar.events.delete({
+        calendarId: 'primary',
+        eventId,
+      })
+      res.status(204)
+    }
+  } catch (e) {
+    next(e)
+  }
+})
+
 router.use('/google', require('./google'))

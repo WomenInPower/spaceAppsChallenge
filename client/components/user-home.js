@@ -4,6 +4,8 @@ import moment from 'moment-timezone'
 import AddToCalendar from './calendar-add'
 import {Calendar, momentLocalizer} from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+// import 'react-big-calendar/lib/sass/styles';
+// import 'react-big-calendar/lib/addons/dragAndDrop/styles';
 // a localizer for BigCalendar
 const localizer = momentLocalizer(moment)
 import {loadEvents} from '../store'
