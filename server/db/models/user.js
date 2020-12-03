@@ -1,6 +1,5 @@
 const crypto = require('crypto')
 const db = require('../db')
-//var KnexQueryBuilder = require('knex/lib/query/builder');
 
 const User = db.schema.createTable('users', function (table) {
   table.increments('id').primary()
@@ -10,6 +9,7 @@ const User = db.schema.createTable('users', function (table) {
   table.string('password')
   table.string('salt')
   table.string('googleId')
+  table.timestamps(true, true)
 })
 
 module.exports = User

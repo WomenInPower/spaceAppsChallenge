@@ -101,11 +101,8 @@ const startListening = () => {
   require('./socket')(io)
 }
 
-//const syncDb = () => db.sync()
-
 async function bootApp() {
   //await sessionStore.execSync()
-  //await syncDb()
   await createApp()
   await startListening()
 }
