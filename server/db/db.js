@@ -1,4 +1,17 @@
-const db = require('../../knexfile')
+const pkg = require('../../package.json')
+const path = require('path')
+const knex = require('knex')
+const databaseName = pkg.name + (process.env.NODE_ENV === 'test' ? '-test' : '')
+
+const db = knex({
+  client: 'pg',
+  connection:
+    process.env.DATABASE_URL || `postgres://localhost:5432/${databaseName}`,
+  migrations: {
+    directory: path.join(__dirname, './server/db/models/migrations'),
+    extention: 'sql',
+  },
+})
 
 module.exports = db
 
