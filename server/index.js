@@ -3,7 +3,7 @@ const express = require('express')
 const morgan = require('morgan')
 const compression = require('compression')
 const session = require('express-session')
-const SequelizeStore = require('connect-session-sequelize')(session.Store)
+const KnexStore = require('connect-session-knex')(session)
 const db = require('./db')
 const https = require('https')
 const http = require('http')
@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 8080
 const TLS_KEY = process.env.TLS_KEY || ''
 const TLS_CERT = process.env.TLS_CERT || ''
 
-const sessionStore = new SequelizeStore({db})
+const sessionStore = new KnexStore({knex: db})
 const app = express()
 const socketio = require('socket.io')
 module.exports = app
@@ -100,11 +100,7 @@ const startListening = () => {
   require('./socket')(io)
 }
 
-const syncDb = () => db.sync()
-
 async function bootApp() {
-  await sessionStore.sync()
-  await syncDb()
   await createApp()
   await startListening()
 }

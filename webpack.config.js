@@ -45,7 +45,20 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          'style-loader',
+          'css-loader',
+          //'sass-loader',
+          // {
+          //   loader: "sass-loader",
+          //   options: {
+          //     implementation: require("sass"),
+          //     sassOptions: {
+          //       fiber: false,
+          //     },
+          //   },
+          // }
+        ],
       },
     ],
   },

@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {User} = require('../db/models')
+const db = require('../db')
 const {google} = require('googleapis')
 /**
  * For OAuth keys and other secrets, your Node process will search
@@ -61,10 +61,12 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
       const profile = {googleId, accessToken, email, firstName, lastName}
       req.session.user = profile
 
-      await User.findOrCreate({
-        where: {googleId},
-        defaults: {email, firstName, lastName},
-      })
+      // knex.select() returns an array but knex.first() returns the first single value
+      const person = await db.from('user').first('*').where({googleId})
+
+      if (!person) {
+        await db('user').insert({googleId, email, firstName, lastName})
+      }
 
       if (req.session.user) {
         res.redirect('/home')
