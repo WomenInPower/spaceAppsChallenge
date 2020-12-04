@@ -14,6 +14,7 @@ router.post('/logout', (req, res) => {
 router.get('/me', (req, res, next) => {
   try {
     const {user} = req.session
+    //console.log(user)
     //take out accessTaken before sending back
     if (user) {
       const filtered = Object.keys(user).filter((key) => key !== 'accessToken')
@@ -21,7 +22,7 @@ router.get('/me', (req, res, next) => {
         obj[key] = user[key]
         return obj
       }, {})
-      console.log(filteredUser)
+      // console.log(filteredUser)
       res.json(filteredUser)
     }
   } catch (err) {

@@ -30,7 +30,7 @@ module.exports = {
     filename: './public/bundle.js',
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.css', '.scss'],
+    extensions: ['.js', '.jsx'],
   },
   devtool: 'source-map',
   watchOptions: {
@@ -44,7 +44,7 @@ module.exports = {
         use: 'babel-loader',
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.css$/i,
         use: [
           'style-loader',
           'css-loader',

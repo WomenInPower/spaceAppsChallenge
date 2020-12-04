@@ -9,7 +9,6 @@ const db = knex({
     process.env.DATABASE_URL || `postgres://localhost:5432/${databaseName}`,
   migrations: {
     directory: path.join(__dirname, './server/db/models/migrations'),
-    extention: 'sql',
   },
 })
 

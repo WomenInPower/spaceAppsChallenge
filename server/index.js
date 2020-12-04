@@ -8,7 +8,6 @@ const db = require('./db')
 const https = require('https')
 const http = require('http')
 const fs = require('fs')
-//const { execSync } = require('child_process')
 if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 
 const PORT = process.env.PORT || 8080
@@ -102,7 +101,6 @@ const startListening = () => {
 }
 
 async function bootApp() {
-  //await sessionStore.execSync()
   await createApp()
   await startListening()
 }
